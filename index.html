@@ -1,0 +1,3299 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S & S Enterprises</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Confetti.js for celebration animation -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js" defer></script>
+
+    <!-- Custom Styles for a World-Class Look -->
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --bg-light: #f8f9fa;
+            --text-dark: #212529;
+            --text-light: #e0e0e0;
+            --accent-gold: #c9a77e;
+            --accent-gold-darker: #b38f69;
+        }
+
+        /* General Body Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            /* Changed opacity to 0 for fade-in effect */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        body.overflow-hidden {
+            overflow: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url('https://i.postimg.cc/hjHR1Hw9/herobanner.jpg');
+            background-size: cover;
+            background-position: center center; 
+        }
+        
+        /* Typewriter effect - Cursor Removed */
+        .typewriter-cursor {
+           display: none;
+        }
+
+        #typewriter-subtitle {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            #typewriter-subtitle {
+                height: 28px;
+            }
+        }
+
+        /* Navigation Bar Styling */
+        .header {
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .header.scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.4s ease;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .header:not(.scrolled) .nav-link, .header:not(.scrolled) #desktop-user-name {
+            color: white;
+        }
+        .header.scrolled .nav-link, .header.scrolled #desktop-user-name {
+            color: var(--text-dark);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-gold);
+            transition: width 0.4s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-gold);
+        }
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Premium Button Style */
+        .btn-premium {
+            background-color: var(--accent-gold);
+            color: white;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 15px rgba(197, 164, 126, 0.2);
+            font-weight: 500;
+        }
+        .btn-premium:hover {
+            background-color: var(--accent-gold-darker);
+            transform: translateY(-3px);
+            box-shadow: 0 0 10px rgba(201, 167, 126, 0.6), 0 0 20px rgba(201, 167, 126, 0.4);
+        }
+        .btn-premium:active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(201, 167, 126, 0.8), 0 0 25px rgba(201, 167, 126, 0.6); 
+            transition: all 0.15s ease-out;
+        }
+        
+        /* Glowing Text for Nayra AI */
+        .text-glow {
+            text-shadow: 0 0 8px rgba(197, 164, 126, 0.6),
+                         0 0 16px rgba(197, 164, 126, 0.6);
+            animation: glow-animation 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-animation {
+            0% { text-shadow: 0 0 8px rgba(197, 164, 126, 0.5); }
+            50% { text-shadow: 0 0 25px rgba(201, 167, 126, 0.8); }
+            100% { text-shadow: 0 0 8px rgba(197, 164, 126, 0.5); }
+        }
+
+        #recommendations-output, #gemini-response-area {
+            box-shadow: 0 0 15px rgba(201, 167, 126, 0.3);
+            border: 1px solid rgba(201, 167, 126, 0.2);
+            text-align: left;
+        }
+        
+        #recommendations-output ul, #gemini-response-area ul {
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+
+        #recommendations-output {
+            max-height: 500px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-gold) #f1f1f1;
+        }
+        #recommendations-output::-webkit-scrollbar {
+            width: 8px;
+        }
+        #recommendations-output::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        #recommendations-output::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 10px;
+        }
+        #recommendations-output::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gold-darker);
+        }
+
+        /* Product Category Styling */
+        .product-category-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border: 1px solid #e5e7eb;
+            background-color: white;
+        }
+        .product-category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+        }
+        .product-category-card.active {
+            border-color: var(--accent-gold);
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+        }
+        .product-category-card h3 {
+             transition: color 0.4s ease;
+        }
+        .product-category-card.active h3 {
+            color: var(--accent-gold);
+        }
+
+        /* Product Detail Section Styling */
+        .product-detail-section {
+            display: none;
+        }
+        .sub-product-card {
+            background-color: white;
+            border: 1px solid #f3f4f6;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .sub-product-card:hover {
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transform: translateY(-5px);
+        }
+        
+        /* Section Title Styling */
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Timeline for About Section */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            background-color: var(--accent-gold);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1.5px;
+            opacity: 0.3;
+            transform: scaleY(0);
+            transform-origin: top;
+        }
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        .timeline-container.left { left: 0; }
+        .timeline-container.right { left: 50%; }
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -12.5px;
+            background-color: white;
+            border: 4px solid var(--accent-gold);
+            top: 28px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-container.right::after { left: -12.5px; }
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        @media (max-width: 767px) {
+            .timeline::after {
+                left: 18px;
+                margin-left: 0;
+            }
+            .timeline-container {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 15px;
+            }
+            .timeline-container.left,
+            .timeline-container.right {
+                left: 0;
+            }
+            .timeline-content {
+                text-align: left;
+            }
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .px-6 {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .py-5 {
+                padding-top: 0.75rem;
+                padding-bottom: 0.75rem;
+            }
+            .section-title {
+                font-size: 2.5rem;
+            }
+            .contact-info .text-lg {
+                font-size: 1rem;
+            }
+            .contact-info p {
+                justify-content: flex-start;
+                text-align: left;
+            }
+        }
+
+        /* Brochure CTA Section */
+        .brochure-cta {
+            background-image: linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.8)), url('https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+        }
+        .footer a {
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* --- Product Modal (Mobile First) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-light);
+            z-index: 10000;
+            overflow-y: auto;
+        }
+        .modal-container {
+            background-color: white;
+            width: 100%;
+            min-height: 100%;
+            display: block;
+        }
+        .modal-image-pane {
+            width: 100%;
+            height: 50vh;
+            background-color: #f0f0f0;
+        }
+        .modal-image-pane img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Changed to cover to fill the frame */
+        }
+        .modal-details-pane {
+            padding: 1.5rem;
+        }
+        .modal-close-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.4);
+            color: white;
+            z-index: 10001;
+        }
+        
+        /* --- Enhanced Desktop Modal Styles --- */
+        @media (min-width: 1024px) { /* lg breakpoint for a more spacious layout */
+            .modal-overlay {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                background-color: rgba(26, 26, 26, 0.8); /* Darker overlay for desktop */
+                backdrop-filter: blur(8px);
+            }
+
+            .modal-container {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                max-width: 64rem; /* 1024px */
+                height: 90vh;
+                max-height: 700px;
+                min-height: auto; /* Override mobile min-height */
+                border-radius: 1rem;
+                box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+                overflow: hidden;
+            }
+
+            .modal-image-pane {
+                width: 45%;
+                height: 100%;
+                flex-shrink: 0;
+            }
+            
+            .modal-image-pane img {
+                object-fit: cover; /* Ensured cover for desktop as well */
+            }
+
+            .modal-details-pane {
+                width: 55%;
+                height: 100%;
+                overflow-y: auto; /* Make details scrollable */
+                padding: 2.5rem;
+            }
+            
+            /* Custom scrollbar for desktop modal */
+            .modal-details-pane::-webkit-scrollbar {
+                width: 8px;
+            }
+            .modal-details-pane::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            .modal-details-pane::-webkit-scrollbar-thumb {
+                background: var(--accent-gold);
+                border-radius: 10px;
+            }
+            .modal-details-pane::-webkit-scrollbar-thumb:hover {
+                background: var(--accent-gold-darker);
+            }
+
+            .modal-close-btn {
+                position: fixed; /* Keep it fixed relative to viewport */
+                top: 1.5rem;
+                right: 1.5rem;
+                background: rgba(0,0,0,0.5);
+                border-radius: 50%;
+                width: 2.5rem;
+                height: 2.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.3s ease;
+            }
+            .modal-close-btn:hover {
+                background: rgba(0,0,0,0.7);
+            }
+        }
+
+        /* Detailed specifications */
+        .spec-detailed h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.25rem;
+        }
+        .spec-detailed p, .spec-detailed ul {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+        .spec-detailed ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .spec-detailed strong {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        /* "View Full Specifications" button */
+        .btn-view-spec {
+            background-color: transparent;
+            color: var(--accent-gold);
+            border: 2px solid var(--accent-gold);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: none;
+            border-radius: 12px;
+        }
+        .btn-view-spec:hover {
+            background-color: var(--accent-gold);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(197, 164, 126, 0.3);
+            background-image: linear-gradient(to right, var(--accent-gold), var(--accent-gold-darker));
+        }
+
+        /* Map Page Styles */
+        #map-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background-color: var(--bg-light);
+        }
+        #map-iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        #back-to-site-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 101;
+        }
+         /* Loading spinner styles */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-left-color: #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        
+        button .spinner {
+             border: 4px solid rgba(255, 255, 255, 0.3);
+             border-left-color: #ffffff;
+        }
+        
+        /* UPDATED: Enhanced glowing spinner for orders */
+        #orders-loader .spinner {
+            width: 50px;
+            height: 50px;
+            border-width: 5px; /* Thicker border */
+            border-top-color: var(--accent-gold);
+            border-left-color: var(--accent-gold);
+            border-right-color: var(--accent-gold);
+            border-bottom-color: transparent;
+            /* Updated animation for more shimmer */
+            animation: spin 0.8s linear infinite, glow-spinner 1.5s ease-in-out infinite;
+        }
+        
+        /* UPDATED: Enhanced glow animation */
+        @keyframes glow-spinner {
+            0% {
+                box-shadow: 0 0 5px rgba(201, 167, 126, 0.5), 0 0 10px rgba(201, 167, 126, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(201, 167, 126, 0.9), 0 0 30px rgba(201, 167, 126, 0.7);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(201, 167, 126, 0.5), 0 0 10px rgba(201, 167, 126, 0.4);
+            }
+        }
+
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Order Section Specific Styles */
+        .order-card {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .order-status-Placed { background-color: #e0f2fe; color: #0c4a6e; }
+        .order-status-Shipped { background-color: #dbeafe; color: #1e40af; }
+        .order-status-Delivered { background-color: #dcfce7; color: #166534; }
+        .order-status-Cancelled { background-color: #fee2e2; color: #991b1b; }
+        
+        /* Order Tracking Timeline */
+        .tracking-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-top: 1.5rem;
+            padding-bottom: 1rem;
+        }
+        .tracking-timeline::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #e5e7eb; /* gray-200 */
+            z-index: 0;
+            width: calc(100% - 80px); /* Adjust width to not overflow */
+            margin: 0 40px; /* Center the line */
+        }
+        
+        /* UPDATED: Glowing progress line */
+        .tracking-line-progress {
+            position: absolute;
+            top: 10px;
+            left: 40px; /* Start from the center of the first dot */
+            height: 4px; /* Slightly thicker */
+            background-color: var(--accent-gold);
+            z-index: 1;
+            transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* Smoother transition */
+            border-radius: 2px;
+            /* The requested glow effect */
+            box-shadow: 0 0 8px var(--accent-gold), 0 0 12px var(--accent-gold-darker);
+        }
+
+        .tracking-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 80px;
+            position: relative;
+            z-index: 2;
+        }
+        .tracking-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #e5e7eb; /* gray-200 */
+            border: 3px solid white;
+            transition: background-color 0.5s ease;
+        }
+        .tracking-step.completed .tracking-dot {
+            background-color: var(--accent-gold);
+        }
+        .tracking-step.completed .tracking-dot::after {
+            content: '\f00c'; /* Font Awesome check icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .tracking-label {
+            font-size: 0.75rem; /* 12px */
+            margin-top: 0.5rem;
+            color: #6b7280; /* gray-500 */
+            font-weight: 500;
+        }
+        .tracking-step.completed .tracking-label {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+
+        /* Full-screen success modal styles */
+        .success-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            z-index: 10002;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .success-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-modal-content {
+            background-color: transparent;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 90%;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-modal-overlay.active .success-modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Mobile Menu Specific Styles */
+        #mobile-menu {
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: translateX(100%);
+        }
+        #mobile-menu.active {
+            transform: translateX(0%);
+        }
+        #mobile-menu .nav-link {
+            color: var(--text-dark) !important;
+        }
+        
+        /* Hamburger Animation Styles */
+        #mobile-menu-button-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* 12px */
+        }
+        #mobile-user-name {
+            font-weight: 500;
+            transition: color 0.4s ease;
+        }
+        .header:not(.scrolled) #mobile-user-name {
+            color: white;
+        }
+        .header.scrolled #mobile-user-name {
+            color: var(--text-dark);
+        }
+
+        .hamburger-line {
+            display: block;
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background: currentColor;
+            border-radius: 2px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+        .hamburger-line.top { top: 0px; }
+        .hamburger-line.middle { top: 8px; }
+        .hamburger-line.bottom { top: 16px; }
+
+        #mobile-menu-button.open {
+            color: var(--text-dark);
+        }
+
+        #hamburger-anim-icon.open .hamburger-line.top {
+            top: 8px;
+            transform: rotate(135deg);
+        }
+        #hamburger-anim-icon.open .hamburger-line.middle {
+            opacity: 0;
+            transform: translateX(-1rem);
+        }
+        #hamburger-anim-icon.open .hamburger-line.bottom {
+            top: 8px;
+            transform: rotate(-135deg);
+        }
+        #mobile-menu-button:active #hamburger-anim-icon {
+            transform: scale(0.9);
+            transition: transform 0.1s;
+        }
+        
+        /* This rule ensures the hamburger is hidden on screens wider than 800px as requested */
+        @media (min-width: 801px) {
+            #mobile-menu-button-container {
+                display: none;
+            }
+        }
+        /* This rule ensures desktop nav is hidden on screens smaller than 801px */
+        @media (max-width: 800px) {
+            #desktop-nav-links {
+                display: none;
+            }
+        }
+
+
+        /* --- Google Sign-In System Styles --- */
+        #login-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #login-button {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid transparent;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .header.scrolled #login-button {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border-color: #e5e7eb;
+        }
+
+        #login-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .header.scrolled #login-button:hover {
+            background-color: #f3f4f6;
+        }
+
+        #login-button svg {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        /* Centered Login Modal */
+        #login-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #login-modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #login-modal-content {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            text-align: center;
+            color: var(--text-dark);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+        }
+        #login-modal-overlay.visible #login-modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        #login-modal-close-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #6b7280;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        #login-modal-close-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #1f2937;
+        }
+
+        #google-login-btn-modal {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+            color: var(--text-dark);
+        }
+        #google-login-btn-modal:hover {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+        }
+        #google-login-btn-modal svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+        }
+        
+        /* Validation error message style */
+        .error-message {
+            color: #ef4444; /* red-500 */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.25rem; /* mt-1 */
+            display: none; /* Initially hidden */
+        }
+        input.invalid {
+            border-color: #ef4444;
+        }
+        input.invalid:focus {
+            --tw-ring-color: #ef4444;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Main Site Content -->
+    <div id="site-content">
+        <!-- Header & Navigation -->
+        <header id="header" class="header fixed top-0 left-0 right-0 z-50">
+            <nav class="container mx-auto px-4 sm:px-6 py-2 flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" class="text-2xl md:text-3xl font-extrabold tracking-wider" style="color: var(--accent-gold);">
+                    S&S
+                </a>
+                
+                <!-- Desktop Menu & Login Wrapper -->
+                <div id="desktop-nav-links" class="flex items-center space-x-8">
+                    <a data-target="#home" class="nav-link">Home</a>
+                    <a data-target="#products" class="nav-link">Products</a>
+                    <a data-target="#my-orders" class="nav-link hidden">My Order</a>
+                    <a data-target="#about" class="nav-link">About Us</a>
+                    <a href="https://trust-sands.netlify.app/" target="_blank" rel="noopener noreferrer" class="nav-link">Hall of Trust</a>
+                    <a href="https://sands-gallery.netlify.app/" target="_blank" rel="noopener noreferrer" class="nav-link">My Gallery</a>
+                    <a href="https://drive.google.com/file/d/1apBXUttlYm5crkKMyIga4PR_Xtum_Ffj/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="nav-link">Brochure</a>
+                    <a data-target="#map" class="nav-link">Map</a>
+                    <div id="login-area" class="flex items-center space-x-3">
+                        <!-- Desktop Login/User Info will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Mobile menu button container (Only shows on mobile) -->
+                <div id="mobile-menu-button-container" class="md:hidden">
+                    <span id="mobile-user-name" class="hidden"></span>
+                    <button id="mobile-menu-button" class="text-white focus:outline-none z-[60] p-2 -mr-2">
+                        <div id="hamburger-anim-icon" class="w-6 h-6 relative">
+                            <span class="hamburger-line top"></span>
+                            <span class="hamburger-line middle"></span>
+                            <span class="hamburger-line bottom"></span>
+                        </div>
+                    </button>
+                </div>
+            </nav>
+        </header>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden fixed inset-0 bg-white z-40 p-6 pt-24 flex flex-col overflow-y-auto">
+            <!-- Mobile Auth Area -->
+            <div id="mobile-auth-area" class="px-4 pb-6 border-b border-gray-200">
+                <!-- Mobile Auth UI will be injected here -->
+            </div>
+            
+            <!-- Mobile Navigation Links -->
+            <div class="flex flex-col items-center space-y-6 mt-8 flex-grow">
+                <a data-target="#home" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">Home</a>
+                <a data-target="#products" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">Products</a>
+                <a data-target="#my-orders" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold hidden">My Orders</a>
+                <a href="https://trust-sands.netlify.app/" target="_blank" rel="noopener noreferrer" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">Hall of Trust</a>
+                <a href="https://sands-gallery.netlify.app/" target="_blank" rel="noopener noreferrer" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">Gallery</a>
+                <a href="https://drive.google.com/file/d/1apBXUttlYm5crkKMyIga4PR_Xtum_Ffj/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">Brochure</a>
+                <a data-target="#map" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">Map</a>
+                <a data-target="#about" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">About Us</a>
+                <a data-target="#contact" class="block py-3 nav-link text-center text-gray-700 text-xl font-semibold">Enquire Now</a>
+            </div>
+            
+            <!-- Mobile Logout Area -->
+            <div class="mt-auto pb-4">
+                <div id="mobile-logout-area" class="mt-2"></div>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero-section text-white">
+            <div class="bg-black bg-opacity-60 w-full h-full flex items-center justify-center">
+                <div class="container mx-auto px-6 text-center">
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4 leading-tight hero-title">S & S Enterprises</h1>
+                    <p id="typewriter-subtitle" class="text-lg md:text-xl max-w-3xl mx-auto mb-8 hero-subtitle font-light"></p>
+                    <a href="#products" class="btn-premium text-lg font-bold py-4 px-12 rounded-full hero-button">View Products</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Wrapper -->
+        <div id="main-content">
+            
+            <!-- Products Section -->
+            <section id="products" class="py-24 md:py-32">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <div class="text-center mb-16">
+                        <h2 class="section-title text-gray-900">Our Curated Collection</h2>
+                        <p class="section-subtitle mt-4">An ecosystem of solutions engineered for performance and elegance. Select a category to explore.</p>
+                    </div>
+
+                    <!-- Product Category Cards -->
+                    <div id="product-category-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
+                        <!-- Category cards will be injected by JavaScript -->
+                    </div>
+
+                    <!-- Detailed Product Views -->
+                    <div id="product-details-container" class="mt-12">
+                        <!-- Detailed product views will be injected by JavaScript -->
+                    </div>
+
+                    <!-- New Product Recommender Section -->
+                    <div id="product-recommender" class="mt-24 bg-white p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-200">
+                        <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-2">
+                            <span class="text-[var(--accent-gold)] text-glow">Nayra AI</span> Product Recommendations
+                        </h3>
+                        <p class="text-center text-gray-600 mb-8">Tell us your needs and let our AI assistant suggest the perfect products for you.</p>
+                        <div class="max-w-3xl mx-auto space-y-6">
+                            <div>
+                                <label for="user-needs" class="text-sm font-semibold text-gray-700">Your Needs</label>
+                                <textarea id="user-needs" rows="4" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="Example: I need energy-efficient windows for my home that reduce noise."></textarea>
+                            </div>
+                            <div>
+                                <label for="user-budget" class="text-sm font-semibold text-gray-700">Your Estimated Budget</label>
+                                <input type="text" id="user-budget" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="Example: ₹50,000 - ₹1,00,000 or 'Medium'">
+                            </div>
+                            <button type="button" id="get-recommendations-btn" class="w-full btn-premium font-bold py-3 px-6 rounded-lg flex items-center justify-center">
+                                <span id="recommendations-spinner" class="spinner hidden"></span>
+                                <span id="recommendations-text">Get Nayra Recommendation</span>
+                            </button>
+                            <div id="recommendations-output" class="hidden mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                                <!-- Recommendations will be injected here by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- My Orders Section - Hidden by default, shown on nav click -->
+            <section id="my-orders" class="py-24 md:py-32 bg-gray-50 hidden">
+                <div class="container mx-auto px-4 sm:px-6 relative">
+                     <button id="my-orders-close-btn" class="absolute top-0 right-4 text-gray-500 hover:text-red-600 transition-colors z-10">
+                        <i class="fas fa-times fa-2x"></i>
+                    </button>
+                    <div class="text-center mb-16">
+                        <h2 class="section-title text-gray-900">My Orders</h2>
+                        <p class="section-subtitle mt-4">Track your real-time order status and manage your purchase history.</p>
+                    </div>
+                     <div id="orders-container" class="min-h-[300px] relative">
+                        <div id="orders-loader" class="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm rounded-lg">
+                            <div class="spinner"></div>
+                        </div>
+                        <div id="orders-list" class="space-y-8">
+                            <!-- Orders will be dynamically loaded here -->
+                        </div>
+                        <div id="no-orders-message" class="text-center text-gray-600 p-10 hidden">
+                            <i class="fas fa-box-open fa-4x text-gray-300 mb-4"></i>
+                            <p class="text-xl">No orders found.</p>
+                            <p>Place an order to see it here!</p>
+                        </div>
+                         <div id="orders-error-message" class="text-center text-red-600 p-10 hidden">
+                             <i class="fas fa-exclamation-triangle fa-4x text-red-300 mb-4"></i>
+                            <p class="text-xl">Could not load orders.</p>
+                            <p>Please try again later.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Us Section -->
+            <section id="about" class="py-24 md:py-32 bg-white">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <div class="text-center mb-16">
+                        <h2 class="section-title text-gray-900">A Legacy of Innovation & Trust</h2>
+                        <p class="section-subtitle mt-4">Shaping a world of precision, performance, and trust since 2014.</p>
+                    </div>
+                    
+                    <div class="grid lg:grid-cols-2 gap-16 items-center mb-24">
+                        <div class="about-image">
+                            <img src="https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="S & S Enterprises Team Collaboration" class="rounded-2xl shadow-2xl w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="about-content">
+                            <h3 class="text-4xl font-bold text-gray-800 mb-6">Our Journey to Excellence</h3>
+                            <p class="text-gray-600 text-lg mb-4">Since our establishment in 2014, S & S Enterprises has been on a remarkable growth trajectory. With over 11+ years in business, our mission is to deliver superior, innovative solutions across the infrastructure and technology sectors. We are more than just suppliers; we are partners in our clients' success, a fact reflected in our numerous positive testimonials.</p>
+                            <p class="text-600 text-lg mb-6">This journey has been marked by significant product diversification, key partnerships with global leaders, and national certifications like "Made in India," solidifying our position as a trusted industry leader. We operate as a Wholesaler/Distributor.</p>
+                            <div class="mt-6 border-t pt-6">
+                                <h4 class="text-2xl font-bold text-gray-700 mb-4">Company Leadership</h4>
+                                <p class="text-gray-600"><strong>CEO - </strong> Kamal Kashyap</p>
+                                <p class="text-gray-600"><strong>Director & Mentor - </strong> Mr. Uday Jha</p>
+                                <p class="text-gray-600"><strong>Strategic Partner (GST) - </strong> Sudhira Devi</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="mt-24">
+                         <h3 class="text-4xl font-bold text-gray-800 mb-16 text-center">Our Growth Story</h3>
+                        <div class="timeline">
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <h2 class="text-2xl font-bold">2014 - Foundation</h2>
+                                    <p class="text-gray-600 mt-2">The journey begins. S & S Enterprises is established as a proprietorship, laying the groundwork for future success.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <h2 class="text-2xl font-bold">2017 - Official Recognition</h2>
+                                    <p class="text-gray-600 mt-2">Achieved a key regulatory milestone by obtaining GST registration (GSTIN: 07CNKPD6560P1ZF) on 24-08-2017, formalizing our operations on a national scale.</p>
+                                </div>
+                            </div>
+                             <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <h2 class="text-2xl font-bold">2018 - Continuous Growth</h2>
+                                    <p class="text-gray-600 mt-2">From a humble start, we have scaled to a team of 25 professionals and achieved an annual turnover between ₹1.5 - ₹5 Crores</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <h2 class="text-2xl font-bold">2021 - Financial Milestone</h2>
+                                    <p class="text-600 mt-2">Trust and innovation propelled us to a remarkable annual turnover of ₹5 Crores, strengthening our industry footprint.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <h2 class="text-2xl font-bold">2025 - Building Alliances</h2>
+                                    <p class="text-gray-600 mt-2">Formed strategic partnerships with global  global leaders like Deceuninck, Aluk, Panasonic, HP, and Dell — ensuring world-class quality in every product.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-16">
+                            <a href="https://sands-gallery.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn-premium text-lg font-semibold py-3 px-10 rounded-full inline-block hover:shadow-lg transition-shadow">
+                                View Gallery
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Business & Partners Section -->
+            <section id="business" class="py-24 md:py-32 bg-white">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <div class="text-center mb-16">
+                        <h2 class="section-title text-gray-900">Our Business Ecosystem & Alliances</h2>
+                        <p class="section-subtitle mt-4">Fueled by strategic partnerships with global technology and infrastructure leaders.</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-12 items-center">
+                        <!-- uPVC & Construction Partners -->
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://www.fenesta.com/images/fenesta-logo.png" alt="Fenesta Logo" class="h-14" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Fenesta';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/s2Hh162S/Veka-Logo.png" alt="VEKA Logo" class="h-10" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=VEKA';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/mrg9LfTB/deceuninck-logo.png" alt="Deceuninck Logo" class="h-16" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Deceuninck';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/YC3gBqKd/images.png" alt="Aluk Logo" class="h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Aluk';" loading="lazy">
+                        </div>
+
+                        <!-- IT & Software Partners -->
+                         <div class="flex justify-center transition duration-300">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft Logo" class="h-10" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Microsoft';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://s3-symbol-logo.tradingview.com/hp--600.png" alt="HP Logo" class="h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=HP';" loading="lazy">
+                        </div>
+                         <div class="flex justify-center transition duration-300">
+                            <img src="https://s3-symbol-logo.tradingview.com/dell--600.png" alt="Dell Logo" class="h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Dell';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/gjhDdFmN/adobe-logo-2017-jpg.webp" alt="Adobe Logo" class="h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Adobe';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/MK3zjCS9/images.png" alt="Norton Logo" class="h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Norton';" loading="lazy">
+                        </div>
+
+                        <!-- Telecom Partners -->
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://s3-symbol-logo.tradingview.com/panasonic--600.png" alt="Panasonic Logo" class="h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Panasonic';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/g2qycHRq/NEC-Logo.png" alt="NEC Logo" class="h-10" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=NEC';" loading="lazy">
+                        </div>
+                        <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/HxqQNQ37/Apple-Logosu.png" alt="Apple Logo" class="h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Apple';" loading="lazy">
+                        </div>
+                         <div class="flex justify-center transition duration-300">
+                            <img src="https://i.postimg.cc/RF67GP1B/360-d197-1-png.avif" alt="Samsung Logo" class="h-16" onerror="this.onerror=null;this.src='https://placehold.co/200x50/cccccc/ffffff?text=Samsung';" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Global Reach Section -->
+            <section id="trust" class="py-24 bg-gray-50">
+                <div class="container mx-auto px-4 sm:px-6 text-center">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="mb-8">
+                            <i class="fa-solid fa-earth-americas text-6xl md:text-7xl mx-auto text-[var(--accent-gold)]"></i>
+                        </div>
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">Trusted Across The Globe</h2>
+                        <p class="text-lg text-gray-600">
+                            Already trusted across <span class="font-bold text-[var(--accent-gold)]">22+ states</span> and more than <span class="font-bold text-[var(--accent-gold)]">5+ countries</span> by 2025, S&S Enterprises is steadily advancing its presence across untapped regions — both in India and internationally.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Brochure CTA Section -->
+            <section id="brochure" class="py-24 brochure-cta">
+                <div class="container mx-auto px-4 sm:px-6 text-center">
+                    <h2 class="text-5xl font-bold text-white mb-4">Explore Our Vision</h2>
+                    <p class="text-lg text-gray-300 max-w-2xl mx-auto mb-8">Explore our brochure for an in-depth look at premium solutions designed to transform your spaces.</p>
+                    <a href="https://drive.google.com/file/d/1apBXUttlYm5crkKMyIga4PR_Xtum_Ffj/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-premium text-lg font-bold py-4 px-12 rounded-full">Download Brochure</a>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-24 md:py-32 bg-gray-100">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <div class="text-center mb-16">
+                        <h2 class="section-title text-gray-900">Let's Build Together</h2>
+                        <p class="section-subtitle mt-4">Have a visionary project? Need expert consultation? Our team is ready to transform your ideas into reality.</p>
+                    </div>
+                    <div class="max-w-6xl mx-auto bg-white p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-200 flex flex-col-reverse md:grid md:grid-cols-2 gap-12">
+                         <div class="contact-form">
+                            <h3 class="text-3xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
+                            <form id="contact-form" class="space-y-6">
+                                <div>
+                                    <label for="contact-name" class="text-sm font-semibold text-gray-700">Full Name</label>
+                                    <input type="text" id="contact-name" name="name" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition">
+                                </div>
+                                <div>
+                                    <label for="contact-email" class="text-sm font-semibold text-gray-700">Email Address</label>
+                                    <input type="email" id="contact-email" name="email" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition">
+                                </div>
+                                 <div>
+                                    <label for="contact-phone" class="text-sm font-semibold text-gray-700">Phone Number</label>
+                                    <input type="tel" id="contact-phone" name="phone" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition">
+                                </div>
+                                <div>
+                                    <label for="contact-message" class="text-sm font-semibold text-gray-700">Your Message</label>
+                                    <textarea id="contact-message" name="message" rows="5" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition"></textarea>
+                                </div>
+                                <div>
+                                    <button type="submit" id="contact-submit-btn" class="w-full btn-premium font-bold py-4 px-6 rounded-lg flex items-center justify-center">
+                                        <span class="spinner hidden"></span>
+                                        <span class="btn-text">Submit Enquiry</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="contact-info bg-cover bg-center rounded-2xl p-8 flex flex-col justify-between min-h-[500px] text-center md:text-left" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)">
+                            <div>
+                                <h3 class="text-4xl font-bold text-white mb-6">Get In Touch</h3>
+                                <p class="text-gray-200 text-lg mb-8">We're available to discuss your needs and provide tailored solutions.</p>
+                            </div>
+                            <div class="space-y-6 text-lg text-white">
+                                <p class="flex items-start"><i class="fa-solid fa-location-dot w-6 text-center mr-4 mt-1 text-[var(--accent-gold)] flex-shrink-0"></i> <span>Registered Office: B-45, Kalkaji, Near Nehru Place, New Delhi-110019</span></p>
+                                <p class="flex items-center"><i class="fa-solid fa-envelope w-6 text-center mr-4 text-[var(--accent-gold)]"></i> <span>info@sandsenterprises.co</span></p>
+                                <p class="flex items-center"><i class="fa-solid fa-phone w-6 text-center mr-4 text-[var(--accent-gold)]"></i> <span>Main: <a href="tel:+911140354122">011-40354122</a></span></p>
+                                <p class="flex items-center"><i class="fa-solid fa-mobile-alt w-6 text-center mr-4 text-[var(--accent-gold)]"></i> <span>Mobile: <a href="tel:+919654830618">+91 9654830618</a></span></p>
+                                <p class="flex items-center"><i class="fa-solid fa-clock w-6 text-center mr-4 text-[var(--accent-gold)]"></i> <span>Office Timings: Monday - Friday: 9:00 AM to 6:00 PM</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Product Modal Container -->
+        <div id="product-modal-container"></div>
+
+        <!-- Full-screen Order Success Modal -->
+        <div id="order-success-modal" class="success-modal-overlay">
+            <div class="success-modal-content">
+                <canvas id="confetti-canvas"></canvas>
+                <h3 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">Order Confirmed! 🎉</h3>
+                <p id="success-product-name" class="text-gray-700 text-xl md:text-2xl mb-4"></p>
+                <p class="text-gray-600 text-lg mb-8">Your order has been placed successfully and will be processed shortly.</p>
+                <button type="button" onclick="closeOrderSuccessModal()" class="btn-premium px-10 py-4 rounded-full text-lg font-semibold">
+                    Continue
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container mx-auto px-4 sm:px-6 py-16">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+                    <div class="col-span-2 lg:col-span-1">
+                        <h3 class="text-2xl font-extrabold mb-4 text-white">S & S Enterprises</h3>
+                        <p class="text-gray-400">Dedicated For Service</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-white">Navigate</h3>
+                        <ul class="space-y-3">
+                            <li><a data-target="#home" class="nav-link">Home</a></li>
+                            <li><a data-target="#products" class="nav-link">Products</a></li>
+                             <li><a data-target="#my-orders" class="nav-link hidden">My Order</a></li>
+                            <li><a data-target="#about" class="nav-link">About</a></li>
+                            <li><a href="https://trust-sands.netlify.app/" target="_blank" rel="noopener noreferrer" class="nav-link">Hall of Trust</a></li>
+                            <li><a href="https://sands-gallery.netlify.app/" target="_blank" rel="noopener noreferrer" class="nav-link">Gallery</a></li>
+                            <li><a href="https://drive.google.com/file/d/1apBXUttlYm5crkKMyIga4PR_Xtum_Ffj/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="nav-link">Brochure</a></li>
+                            <li><a data-target="#map" class="nav-link">Map</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-white">Our Divisions</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#products">uPVC Windows & Doors</a></li>
+                            <li><a href="#products">Telecom</a></li>
+                            <li><a href="#products">IT & Networking</a></li>
+                            <li><a href="#products">Electricity & Power</a></li>
+                            <li><a href="#products">Software</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-white">Connect With Us</h3>
+                        <div class="flex space-x-4 text-2xl justify-center md:justify-start">
+                            <a href="https://wa.me/919654830618" target="_blank" class="text-gray-400"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="mailto:info@sandsent.co" class="text-gray-400"><i class="fa-solid fa-envelope"></i></a>
+                            <a href="#" class="text-gray-400"><i class="fa-brands fa-facebook"></i></a>
+                            <a href="#" class="text-gray-400"><i class="fa-brands fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 border-t border-gray-700 pt-8 text-center text-gray-400">
+                    <p>&copy; 2025 S & S Enterprises. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Map Page -->
+    <div id="map-page" class="hidden" style="display: none;">
+        <button id="back-to-site-btn" class="btn-premium px-6 py-3 rounded-full">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Back to Site
+        </button>
+        <iframe 
+            id="map-iframe"
+            src="https://maps.google.com/maps?q=B-45%2C%20Kalkaji%2C%20Near%20Nehru%20Place%2C%20New%20Delhi-110019&t=&z=15&ieUTF8&iwloc=&output=embed" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
+    <!-- Centered Login Modal -->
+    <div id="login-modal-overlay" class="hidden">
+        <div id="login-modal-content">
+            <button id="login-modal-close-btn">&times;</button>
+            <h3 class="text-2xl font-bold mb-2">Welcome Back</h3>
+            <p class="text-gray-600 mb-6">Sign in to continue to S & S Enterprises.</p>
+            <button id="google-login-btn-modal">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.2 64.5C308 95.6 280.3 80 248 80c-81.6 0-148.2 65.6-148.2 147.3S166.4 374.6 248 374.6c84.3 0 133.8-63.1 141.1-95.3h-141.1v-60.2h215.4c2.8 12.3 4.2 25 4.2 38.8z"/></svg>
+                <span>Sign in with Google</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK - Modular v9+ -->
+    <script type="module">
+        // Import the functions you need from the SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, where, onSnapshot, doc, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+        // User-provided Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6pLSPq-fimPwWbM4NVvFc8f3NscSbSH0",
+            authDomain: "fir-and-s-enterprises.firebaseapp.com",
+            projectId: "fir-and-s-enterprises",
+            storageBucket: "fir-and-s-enterprises.appspot.com",
+            messagingSenderId: "874325774434",
+            appId: "1:874325774434:web:864edc4f287ad5793a813b",
+            measurementId: "G-NRTKVEQ1PS"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // --- DOM Elements ---
+        const loginArea = document.getElementById('login-area');
+        const mobileAuthArea = document.getElementById('mobile-auth-area');
+        const mobileUserName = document.getElementById('mobile-user-name');
+        const mobileLogoutArea = document.getElementById('mobile-logout-area');
+        const loginModalOverlay = document.getElementById('login-modal-overlay');
+        const myOrdersNavLinks = document.querySelectorAll('a[data-target="#my-orders"]');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // --- UI Update Functions ---
+        const updateUIForUser = (user) => {
+            const firstName = user.displayName.split(' ')[0];
+            
+            // Desktop UI
+            loginArea.innerHTML = `
+                <span id="desktop-user-name" class="font-semibold mr-4">${firstName}</span>
+                <button id="logout-button" class="bg-red-500 text-white px-3 py-1 rounded-full text-sm hover:bg-red-600 transition-colors">Logout</button>
+            `;
+
+            // Mobile UI
+            mobileAuthArea.innerHTML = `<p class="text-center font-semibold text-gray-800 text-lg">Greeting, ${firstName}</p>`;
+            mobileUserName.textContent = firstName;
+            mobileUserName.classList.remove('hidden');
+            mobileLogoutArea.innerHTML = `<button id="logout-button-mobile" class="w-full text-center bg-red-500 text-white font-semibold py-3 rounded-lg text-lg hover:bg-red-600 transition-colors"><i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Logout</button>`;
+
+            // Show "My Orders" link
+            myOrdersNavLinks.forEach(link => link.classList.remove('hidden'));
+        };
+
+        const updateUIForLogout = () => {
+            // Desktop UI
+            loginArea.innerHTML = `
+                <button id="login-button">
+                    <span>Login</span>
+                </button>
+            `;
+
+            // Mobile UI
+            mobileAuthArea.innerHTML = `<button id="login-button-mobile" class="w-full text-center btn-premium font-semibold px-5 py-3 rounded-lg text-lg">Login / Sign Up</button>`;
+            mobileUserName.classList.add('hidden');
+            mobileLogoutArea.innerHTML = '';
+
+            // Hide "My Orders" link
+            myOrdersNavLinks.forEach(link => link.classList.add('hidden'));
+        };
+
+        // --- Firebase Auth Logic ---
+        const handleAuthAction = (action) => {
+            if (action === 'logout') {
+                signOut(auth).catch((error) => {
+                    console.error('Sign out error', error);
+                    window.showMessageBox('Failed to log out.', 'error');
+                });
+            } else { // 'login'
+                showLoginModal();
+            }
+        };
+
+        const handleGoogleLogin = () => {
+            signInWithPopup(auth, provider)
+                .then(() => {
+                    closeLoginModal();
+                }).catch((error) => {
+                    console.error("Authentication failed:", error);
+                    window.showMessageBox("Google Sign-In failed. Please try again.", "error");
+                });
+        };
+        
+        const showLoginModal = () => {
+            loginModalOverlay.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                loginModalOverlay.classList.add('visible');
+            });
+        };
+
+        const closeLoginModal = () => {
+            loginModalOverlay.classList.remove('visible');
+            loginModalOverlay.addEventListener('transitionend', () => {
+                loginModalOverlay.classList.add('hidden');
+            }, { once: true });
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                updateUIForUser(user);
+                setupOrderListener(user.uid);
+            } else {
+                updateUIForLogout();
+                setupOrderListener(null);
+            }
+        });
+
+        // --- Real-time Order Listener from Firestore ---
+        let unsubscribeOrders = null; // To store the listener unsubscribe function
+
+        function setupOrderListener(userId) {
+            const ordersList = document.getElementById('orders-list');
+            const loader = document.getElementById('orders-loader');
+            const noOrdersMessage = document.getElementById('no-orders-message');
+            const errorMessage = document.getElementById('orders-error-message');
+
+            // If a listener is already active, unsubscribe from it
+            if (unsubscribeOrders) {
+                unsubscribeOrders();
+                unsubscribeOrders = null;
+            }
+
+            ordersList.innerHTML = '';
+            noOrdersMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+
+            if (!userId) {
+                loader.classList.add('hidden');
+                return;
+            }
+
+            loader.classList.remove('hidden');
+
+            const ordersQuery = query(collection(db, "orders"), where("userId", "==", userId), orderBy("timestamp", "desc"));
+
+            unsubscribeOrders = onSnapshot(ordersQuery, (querySnapshot) => {
+                loader.classList.add('hidden');
+                ordersList.innerHTML = ''; // Clear previous orders on each update
+
+                if (querySnapshot.empty) {
+                    noOrdersMessage.classList.remove('hidden');
+                } else {
+                    noOrdersMessage.classList.add('hidden');
+                    querySnapshot.forEach(doc => {
+                        const order = { id: doc.id, ...doc.data() };
+                        ordersList.innerHTML += createOrderCardHTML(order);
+                    });
+                     // Re-attach event listeners for the newly created cancel buttons
+                    attachCancelButtonListeners();
+                }
+            }, (error) => {
+                console.error("Error listening to orders:", error);
+                loader.classList.add('hidden');
+                errorMessage.classList.remove('hidden');
+            });
+        }
+        
+        // --- Create HTML for a single order card ---
+        function createOrderCardHTML(order) {
+            const orderDate = order.timestamp ? new Date(order.timestamp.toDate()).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A';
+            const totalAmount = (parseFloat(order.product.price.replace(/[^0-9.-]+/g,"")) * order.quantity).toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
+            
+            const statuses = ['Placed', 'Shipped', 'Delivered'];
+            const currentStatusIndex = statuses.indexOf(order.status);
+            
+            // UPDATED: Corrected calculation for progress. Result is a factor from 0.0 to 1.0
+            const progressFactor = currentStatusIndex > 0 ? (currentStatusIndex / (statuses.length - 1)) : 0;
+
+            const trackingTimelineHTML = `
+                <div class="tracking-timeline">
+                    <!-- UPDATED: Corrected width calculation using the factor -->
+                    <div class="tracking-line-progress" style="width: calc(${progressFactor} * (100% - 80px));"></div>
+                    ${statuses.map((status, index) => `
+                        <div class="tracking-step ${currentStatusIndex >= index ? 'completed' : ''}">
+                            <div class="tracking-dot"></div>
+                            <div class="tracking-label">${status}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            const cancelButtonHTML = (order.status === 'Placed') ? `
+                <button data-order-id="${order.id}" class="cancel-order-btn mt-4 w-full md:w-auto bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition-colors text-sm font-semibold">
+                    <i class="fas fa-times-circle mr-2"></i>Cancel Order
+                </button>
+            ` : '';
+
+            return `
+                <div class="order-card" data-order-id="${order.id}">
+                    <div class="flex flex-col md:flex-row justify-between md:items-start gap-4">
+                        <div>
+                            <h4 class="text-xl font-bold text-gray-800">${order.product.name}</h4>
+                            <p class="text-sm text-gray-500 mt-1">Order ID: ${order.id}</p>
+                        </div>
+                        <span class="order-status order-status-${order.status || 'Placed'} self-start md:self-center">${order.status || 'Placed'}</span>
+                    </div>
+                    <div class="mt-4 border-t pt-4">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-500">Order Date</p>
+                                <p class="font-semibold">${orderDate}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Item Price</p>
+                                <p class="font-semibold">${order.product.price}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Quantity</p>
+                                <p class="font-semibold">${order.quantity}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Total Amount</p>
+                                <p class="font-bold text-lg text-[var(--accent-gold)]">${totalAmount}</p>
+                            </div>
+                        </div>
+                    </div>
+                    ${order.status === 'Cancelled' ? '<p class="text-center text-red-600 font-bold mt-6">This order has been cancelled.</p>' : trackingTimelineHTML}
+                    <div class="mt-4 flex justify-end">
+                        ${cancelButtonHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Cancel Order Logic ---
+        async function cancelOrder(orderId) {
+            const orderRef = doc(db, "orders", orderId);
+            const button = document.querySelector(`.cancel-order-btn[data-order-id="${orderId}"]`);
+            if(button) button.disabled = true;
+            
+            try {
+                await updateDoc(orderRef, {
+                    status: "Cancelled"
+                });
+                showMessageBox('Order cancelled successfully.', 'success');
+            } catch (error) {
+                console.error("Error cancelling order: ", error);
+                showMessageBox('Failed to cancel order. Please try again.', 'error');
+                if(button) button.disabled = false;
+            }
+        }
+
+        function attachCancelButtonListeners() {
+            document.querySelectorAll('.cancel-order-btn').forEach(button => {
+                // To prevent multiple listeners, we can remove the old one first
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+                
+                newButton.addEventListener('click', (e) => {
+                    const orderId = e.currentTarget.dataset.orderId;
+                    if (confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
+                       cancelOrder(orderId);
+                    }
+                });
+            });
+        }
+
+        // --- Firestore Order Submission ---
+        const handleFirestoreOrder = async (product) => {
+            if (!validateOrderForm()) return;
+
+            const customerName = document.getElementById('customer-name-final').value;
+            const customerEmail = document.getElementById('customer-email-final').value;
+            const customerPhone = document.getElementById('customer-phone-final').value;
+            const quantity = document.getElementById('order-quantity').value;
+            const streetAddress = document.getElementById('customer-address-street').value;
+            const aptAddress = document.getElementById('customer-address-apt').value;
+            const city = document.getElementById('customer-address-city').value;
+            const postalCode = document.getElementById('customer-address-postal').value;
+
+            const orderData = {
+                product: {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    description: product.desc
+                },
+                quantity: parseInt(quantity, 10),
+                customer: {
+                    name: customerName,
+                    email: customerEmail,
+                    phone: customerPhone,
+                },
+                shippingAddress: {
+                    street: streetAddress,
+                    apartment: aptAddress,
+                    city: city,
+                    postal: postalCode,
+                },
+                timestamp: serverTimestamp(),
+                status: 'Placed',
+                userId: auth.currentUser.uid,
+            };
+
+            const confirmBtn = document.getElementById('confirm-order-btn');
+            const btnText = confirmBtn.querySelector('.btn-text');
+            const spinner = confirmBtn.querySelector('.spinner');
+            
+            confirmBtn.disabled = true;
+            btnText.textContent = 'Placing Order...';
+            spinner.classList.remove('hidden');
+
+            try {
+                await addDoc(collection(db, "orders"), orderData);
+                window.closeModal();
+                window.showOrderSuccessPopup(product.name);
+            } catch (e) {
+                console.error("Error adding document to Firestore: ", e);
+                window.showMessageBox('❌ Failed to place order. Please try again.', 'error');
+            } finally {
+                confirmBtn.disabled = false;
+                btnText.textContent = 'Confirm Order';
+                spinner.classList.add('hidden');
+            }
+        };
+
+        // --- Firestore Contact Form Submission ---
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+
+            if (!name || !email || !phone || !message) {
+                window.showMessageBox('Please fill out all fields.', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('contact-submit-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const spinner = submitBtn.querySelector('.spinner');
+
+            submitBtn.disabled = true;
+            btnText.classList.add('hidden');
+            spinner.classList.remove('hidden');
+
+            try {
+                await addDoc(collection(db, "enquiries"), {
+                    name,
+                    email,
+                    phone,
+                    message,
+                    timestamp: serverTimestamp()
+                });
+                await window.showMessageBox('Enquiry sent successfully!', 'success');
+                contactForm.reset();
+            } catch (error) {
+                console.error("Error sending enquiry:", error);
+                await window.showMessageBox('Failed to send enquiry. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+            }
+        });
+        
+        // --- Global Event Listeners for Auth & Orders ---
+        document.body.addEventListener('click', (e) => {
+            // Login/Logout buttons
+            if (e.target.closest('#login-button') || e.target.closest('#login-button-mobile')) {
+                handleAuthAction('login');
+            }
+            if (e.target.closest('#logout-button') || e.target.closest('#logout-button-mobile')) {
+                handleAuthAction('logout');
+            }
+            if (e.target.closest('#google-login-btn-modal')) {
+                handleGoogleLogin();
+            }
+            // Close login modal
+            if (e.target === loginModalOverlay || e.target.closest('#login-modal-close-btn')) {
+                closeLoginModal();
+            }
+            // Confirm Order Button (for Firestore)
+            const confirmOrderBtn = e.target.closest('#confirm-order-btn');
+            if (confirmOrderBtn) {
+                e.preventDefault();
+                const productName = document.querySelector('.modal-details-pane .bg-gray-50 p:first-child')?.textContent.replace('Product: ', '').trim();
+                if (productName) {
+                    const product = window.findProductByName(productName);
+                    if (product) {
+                        handleFirestoreOrder(product);
+                    } else {
+                         console.error("Could not find product data for order submission.");
+                    }
+                }
+            }
+        });
+        
+        // Close "My Orders" section
+        document.getElementById('my-orders-close-btn').addEventListener('click', () => {
+            window.handleNavigation({ targetId: '#home', fromNav: true });
+        });
+
+        // Expose functions to global scope
+        window.getAuth = () => auth; 
+        window.getApp = () => app;
+    </script>
+    
+    <!-- JavaScript for Interactivity and Animations -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fade in the body once the DOM is loaded
+        document.body.style.opacity = '1';
+
+        // Initialize GSAP ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- 360 View Links Mapping ---
+        // This object maps product IDs to their respective 360-degree view URLs.
+        const view360Links = {
+            'upvc-001': 'https://top-hung-upvc-window-360view.netlify.app/',
+            'upvc-002': 'https://18-mm-upvc-sliding-window-360view.netlify.app/',
+            'upvc-003': 'https://upvc-two-track-sliding-window-360view.netlify.app/',
+            'upvc-004': 'https://white-upvc-casement-window-360-view.netlify.app/',
+            'upvc-005': 'https://toughened-glass-upvc-sliding-window-3.netlify.app/',
+            'upvc-006': 'https://residential-upvc-sliding-window-360.netlify.app/',
+            'upvc-007': 'https://22mm-upvc-sliding-windows-360-view.netlify.app/',
+            'upvc-008': 'https://toughened-glass-top-hung-upvc-door360.netlify.app/',
+            'upvc-010': 'https://two-track-upvc-door-360view.netlify.app/',
+            'upvc-011': 'https://three-track-upvc-opened-door-360view.netlify.app/',
+            'upvc-012': 'https://upvc-sliding-door-360view.netlify.app/',
+            'upvc-013': 'https://casement-upvc-door-360view.netlify.app/',
+            'upvc-014': 'https://inbuilt-grilled-upvc-window-360view.netlify.app/',
+            'upvc-015': 'https://inbuilt-grill-upvc-sliding-door-360.netlify.app/'
+        };
+
+        // --- DATA ---
+        // This object holds all product data, organized by category.
+        const productsData = {
+            upvc: {
+                title: 'uPVC Windows & Doors',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" /></svg>`,
+                description: "Complete uPVC solutions with architecture integration. High-quality, durable, and energy-efficient windows and doors for modern living.",
+                products: [
+                    { 
+                        id: 'upvc-001', 
+                        name: 'Top Hung uPVC Sliding Window', 
+                        img: 'https://i.postimg.cc/W3Rpt8FT/top-hung-upvc-slinding-window.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'A versatile top-hung window with tilt and turn functionality, perfect for controlled ventilation and easy cleaning.', 
+                        features: ['Price: ₹700/Sq ft', 'Window Track: One Track', 'Opening Style: Tilt & Turn', 'Glass Type: 8mm Toughened', 'Glazing: Single Glazing', 'MOQ: 100 Sq ft'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Combines tilting for ventilation and full opening for easy cleaning, offering flexibility in high-rise settings.</li>
+                                            <li><strong>Soundproofing:</strong> Single glazing provides moderate noise reduction (up to 25-30 dB), suitable for less noisy environments. Upgrading to double glazing can enhance this to 40-45 dB.</li>
+                                            <li><strong>Security:</strong> Toughened 8mm glass is shatter-resistant, and the tilt mechanism ensures safe operation in high-rise buildings.</li>
+                                            <li><strong>Durability:</strong> UV-resistant uPVC frame withstands Indian climatic conditions (heat, humidity) without fading or warping, offering a 35-40 year lifespan.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Unlike budget competitors like Zacetek (₹500/Sq ft) or Green Windows (₹350/Sq ft), which typically offer fixed or single-track windows, S & S provides tilt & turn functionality, adding versatility.</li>
+                                            <li>Matches premium brands like Rehau or Fenesta in functionality but at a more affordable price point.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Ideal for high-rise apartments, offices, or staircases where controlled ventilation and safety are priorities.</li>
+                                        </ul>
+                                        <h4>4. Why Choose S & S Enterprises</h4>
+                                        <ul>
+                                            <li>Partnership with Deceuninck ensures high-quality uPVC profiles meeting European standards (EN12608-1:2016).</li>
+                                            <li>"Made in India" certification and customized packaging ensure reliability and safe delivery.</li>
+                                            <li>PAN India support and positive customer testimonials highlight dependable after-sales service.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-001']
+                    },
+                    { 
+                        id: 'upvc-002', 
+                        name: '18mm uPVC Sliding Windows', 
+                        img: 'https://i.postimg.cc/Y0Cq1VdB/18mm-u-PVC-Sliding-Windows.png', 
+                        price: '₹750/Sq ft', 
+                        desc: 'Sleek 2-track sliding windows designed for modern homes and villas, featuring an 18mm glass thickness for enhanced insulation.', 
+                        features: ['Price: ₹750/Sq ft', 'Window Track: 2 Track Sliding', 'Glass Thickness: 18mm', 'Usage: Home/Villa', 'MOQ: 100 Sq ft'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Two-track sliding mechanism saves space and provides a sleek, modern look.</li>
+                                            <li><strong>Soundproofing:</strong> Thick 18mm glass offers superior noise reduction (up to 35-40 dB), ideal for urban homes or villas near busy areas.</li>
+                                            <li><strong>Energy Efficiency:</strong> Thick glass and uPVC frame reduce heat transfer, lowering cooling costs.</li>
+                                            <li><strong>Durability:</strong> Robust 18mm glass and UV-resistant uPVC ensure longevity in harsh climates.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Competitors like Stay Bright (₹600/Sq ft) or Window Master (₹400/Sq ft) rarely offer 18mm glass, limiting their durability and soundproofing.</li>
+                                            <li>S & S's thicker glass provides a premium edge over budget brands.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Perfect for villas, urban homes, or balconies where space efficiency and noise reduction are critical.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-002']
+                    },
+                    { 
+                        id: 'upvc-003', 
+                        name: 'uPVC Two Track Sliding Window', 
+                        img: 'https://i.postimg.cc/4ysJQ3Q0/u-PVC-Two-Track-Sliding-Window.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'Ideal for office spaces, these 4x2 feet toughened glass windows provide excellent insulation with double glazing.', 
+                        features: ['Price: ₹700/Sq ft', 'Size: 4x2 feet', 'Window Track: 2 Track Sliding', 'Glass Type: 8mm Toughened', 'Glazing: Double Glazing', 'Usage: Office'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Two-track sliding design maximizes space efficiency and offers a professional aesthetic for office environments.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise by 40-50%, ideal for offices in noisy urban areas.</li>
+                                            <li><strong>Security:</strong> Toughened 8mm glass enhances resistance to breakage.</li>
+                                            <li><strong>Energy Efficiency:</strong> Double glazing minimizes heat loss, reducing energy costs.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Budget brands like Green Windows (₹350/Sq ft) use single glazing, while S & S's double glazing is standard, offering superior insulation and soundproofing.</li>
+                                            <li>Matches high-end brands like Veka but at a lower cost.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Best for office spaces, conference rooms, or commercial buildings requiring noise control and a modern look.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-003']
+                    },
+                    { 
+                        id: 'upvc-004', 
+                        name: 'White uPVC Casement Window', 
+                        img: 'https://i.postimg.cc/x8BhVdXj/Gemini-Generated-Image-49dwhu49dwhu49dw.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'Classic rectangular casement window with 8mm thick double-glazed glass, perfect for any room.', 
+                        features: ['Price: ₹700/Sq ft', 'Size: 4x2 feet', 'Glass Thickness: 8mm', 'Glazing: Double Glazing', 'Shape: Rectangular'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Side-hinged casement opening provides maximum ventilation and a timeless aesthetic.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing offers excellent noise reduction (40-50 dB), ideal for urban settings.</li>
+                                            <li><strong>Security:</strong> Multi-point locking system and toughened glass ensure high safety.</li>
+                                            <li><strong>Durability:</strong> UV-resistant uPVC frame resists fading and corrosion.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Budget competitors like Zacetek (₹500/Sq ft) lack double glazing, reducing their soundproofing and insulation capabilities.</li>
+                                            <li>S & S offers premium features at a competitive price compared to brands like Fenesta.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Suitable for living rooms, offices, or high-rise apartments needing ventilation and security.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-004']
+                    },
+                    { 
+                        id: 'upvc-005', 
+                        name: 'Toughened Glass uPVC Sliding Window', 
+                        img: 'https://i.postimg.cc/B6YRNpsK/Gemini-Generated-Image-74bff474bff474bf.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'High-security uPVC sliding window with 8mm toughened glass and double glazing for homes and villas.', 
+                        features: ['Price: ₹700/Sq ft', 'Glass Type: 8mm Toughened', 'Glazing: Double Glazing', 'Usage: Home/Villa'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Sliding mechanism with toughened glass offers a modern, space-saving solution.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise by up to 50%, ideal for homes near busy roads.</li>
+                                            <li><strong>Security:</strong> Toughened glass is highly resistant to impact.</li>
+                                            <li><strong>Energy Efficiency:</strong> Double glazing improves insulation, reducing energy costs.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Budget brands like Green Windows (₹350/Sq ft) use thinner glass and single glazing, compromising on durability and soundproofing.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Ideal for villas, balconies, or urban homes requiring noise reduction and aesthetics.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-005']
+                    },
+                    { 
+                        id: 'upvc-006', 
+                        name: 'Residential uPVC Sliding Windows', 
+                        img: 'https://i.postimg.cc/VvWkxtN1/Residential-u-PVC-Sliding-Windows.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'Durable 4x2 feet sliding windows with 8mm glass and double glazing, perfect for residential properties.', 
+                        features: ['Price: ₹700/Sq ft', 'Size: 4x2 feet', 'Window Track: 2 Track Sliding', 'Glass Thickness: 8mm', 'Glazing: Double Glazing'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Two-track sliding system offers a sleek, residential-friendly aesthetic.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing provides excellent noise reduction (40-50 dB).</li>
+                                            <li><strong>Energy Efficiency:</strong> Reduces heat transfer, lowering cooling costs.</li>
+                                            <li><strong>Durability:</strong> Toughened glass and uPVC frame ensure long-term performance.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Competitors like Stay Bright (₹600/Sq ft) offer single glazing, while S & S provides double glazing as standard.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Perfect for residential settings like living rooms, bedrooms, or balconies.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-006']
+                    },
+                    { 
+                        id: 'upvc-007', 
+                        name: '22mm uPVC Sliding Windows', 
+                        img: 'https://i.postimg.cc/MZ9GW6G6/22mm-u-PVC-Sliding-Windows.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'Premium sliding windows with 22mm floated glass for superior insulation in homes and villas.', 
+                        features: ['Price: ₹700/Sq ft', 'Frame Material: uPVC', 'Glass Type: Floated Glass', 'Glass Thickness: 22mm', 'Usage: Home/Villa'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Thick 22mm floated glass offers a premium look and enhanced durability.</li>
+                                            <li><strong>Soundproofing:</strong> Thick glass provides superior noise reduction (up to 40 dB).</li>
+                                            <li><strong>Durability:</strong> Floated glass and uPVC frame resist environmental wear.</li>
+                                            <li><strong>Energy Efficiency:</strong> Reduces heat transfer, ideal for energy-conscious homes.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>22mm glass thickness is rare among budget brands like Window Master (₹400/Sq ft).</li>
+                                            <li>Offers premium durability at a competitive price.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Ideal for luxury villas or homes requiring robust, high-performance windows.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-007']
+                    },
+                    { 
+                        id: 'upvc-008', 
+                        name: 'Toughened Glass Top Hung uPVC Door', 
+                        img: 'https://i.postimg.cc/HxQYMMX5/Toughened-Glass-Top-Hung-u-PVC-Door.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'A durable swing door for office interiors, featuring a lever handle and 8mm toughened glass.', 
+                        features: ['Price: ₹700/Sq ft', 'Door Type: Swing', 'Usage: Office', 'Location: Interior', 'Height: 6 feet', 'Glass: 8mm Toughened', 'Handle: Lever Handle', 'Glazing: Double Glazing'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Top-hinged swing mechanism offers an elegant, professional look for office interiors.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise by 40-50 dB, ideal for quiet office environments.</li>
+                                            <li><strong>Security:</strong> Toughened glass and lever handle ensure safety.</li>
+                                            <li><strong>Durability:</strong> uPVC resists moisture and corrosion, perfect for long-term use.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Budget brands like Zacetek (₹500/Sq ft) lack double glazing, compromising soundproofing.</li>
+                                            <li>Office-specific design sets it apart from generic doors.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Best for corporate offices or interior spaces requiring aesthetics and noise control.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-008']
+                    },
+                    { 
+                        id: 'upvc-010', 
+                        name: 'Two Track uPVC Door', 
+                        img: 'https://i.postimg.cc/VN0LYpNK/Two-Track-u-PVC-Door.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'A 6-foot high, two-track sliding door with 8mm toughened glass and double glazing.', 
+                        features: ['Price: ₹700/Sq ft', 'Window Track: 2 Track Sliding', 'Height: 6 feet', 'Glass: 8mm Toughened', 'Glazing: Double Glazing'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Two-track sliding mechanism saves space and offers a modern look.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise by 40-50 dB, ideal for urban settings.</li>
+                                            <li><strong>Security:</strong> Toughened glass enhances safety.</li>
+                                            <li><strong>Durability:</strong> UV-resistant uPVC ensures longevity.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Budget brands lack double glazing, reducing their soundproofing capabilities.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Suitable for balconies, patios, or interior spaces in homes.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-010']
+                    },
+                    { 
+                        id: 'upvc-011', 
+                        name: 'Three Track uPVC Opened Door', 
+                        img: 'https://i.postimg.cc/FshRjTPK/Three-Track-u-PVC-Opened-Door.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'A three-track swing door for balconies, equipped with a lever handle and 8mm toughened glass.', 
+                        features: ['Price: ₹700/Sq ft', 'Door Type: Swing', 'Location: Balcony', 'Height: 6 feet', 'Glass: 8mm Toughened', 'Handle: Lever Handle'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Swing mechanism with three-track flexibility offers a unique, spacious opening.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise effectively.</li>
+                                            <li><strong>Security:</strong> Lever handle and toughened glass ensure safety.</li>
+                                            <li><strong>Durability:</strong> Weather-resistant uPVC for outdoor use.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Three-track design is rare among budget brands, offering greater flexibility.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Ideal for balconies or large openings requiring ventilation and aesthetics.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-011']
+                    },
+                    { 
+                        id: 'upvc-012', 
+                        name: 'uPVC Sliding Doors', 
+                        img: 'https://i.postimg.cc/jSM6DFhP/Gemini-Generated-Image-1k0gyw1k0gyw1k0g-copy.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'Versatile closet-style sliding doors for home interiors, with 8mm toughened glass.', 
+                        features: ['Price: ₹700/Sq ft', 'Usage: Home', 'Location: Interior', 'Height: 6 feet', 'Glass: 8mm Toughened', 'Sliding Type: Closet Doors'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Sliding mechanism for space-saving and modern aesthetics.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise by 40-50 dB.</li>
+                                            <li><strong>Security:</strong> Toughened glass ensures safety.</li>
+                                            <li><strong>Durability:</strong> UV-resistant and corrosion-free.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Budget brands offer single glazing, while S & S provides double glazing as standard.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Perfect for interior closet doors or home partitions.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-012']
+                    },
+                    { 
+                        id: 'upvc-013', 
+                        name: 'Casement uPVC Door', 
+                        img: 'https://i.postimg.cc/vmCTfMjR/Casement-u-PVC-Door.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'An exterior sliding door with 8mm toughened glass, offering security and style.', 
+                        features: ['Price: ₹700/Sq ft', 'Door Type: Sliding', 'Location: Exterior', 'Height: 6 feet', 'Glass: 8mm Toughened'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Sliding casement design for exterior use, combining aesthetics and functionality.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise significantly.</li>
+                                            <li><strong>Security:</strong> Toughened glass and robust frame enhance safety.</li>
+                                            <li><strong>Durability:</strong> Weather-resistant uPVC for long-term outdoor use.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Budget brands lack the combination of sliding mechanism and double glazing.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Ideal for exterior entrances or patios.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-013']
+                    },
+                    { 
+                        id: 'upvc-014', 
+                        name: 'Inbuilt Grilled uPVC Window', 
+                        img: 'https://i.postimg.cc/XJJzZ5F7/Gemini-Generated-Image-145kbr145kbr145k.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'Casement window with integrated grills for added security, featuring double glazing and a two-track sliding design.', 
+                        features: ['Price: ₹700/Sq ft', 'Size: 4x2 feet', 'Opening Style: Casement', 'Glass: 8mm Toughened', 'Glazing: Double Glazing', 'Grills: Yes'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Casement opening with inbuilt grills for added security and aesthetics.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise by 40-50 dB.</li>
+                                            <li><strong>Security:</strong> Inbuilt grills and toughened glass provide robust protection.</li>
+                                            <li><strong>Durability:</strong> UV-resistant uPVC ensures longevity.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Inbuilt grills are rare in budget brands like Zacetek.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Ideal for offices or urban homes requiring security and noise reduction.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-014']
+                    },
+                    { 
+                        id: 'upvc-015', 
+                        name: 'Inbuilt Grill uPVC Sliding Doors', 
+                        img: 'https://i.postimg.cc/MK2JLsV7/Gemini-Generated-Image-ap27irap27irap27.png', 
+                        price: '₹700/Sq ft', 
+                        desc: 'Finished brown sliding doors with inbuilt grills and a two-track channel, ideal for home exteriors.', 
+                        features: ['Price: ₹700/Sq ft', 'Usage: Home', 'Location: Exterior', 'Frame Color: Brown', 'Sliding Channel: Two Track', 'Surface: Finished'],
+                        detailedSpec: `<div class="spec-detailed">
+                                        <h4>1. Unique Features & Benefits</h4>
+                                        <ul>
+                                            <li><strong>Design:</strong> Two-track sliding with inbuilt grills for security and aesthetics.</li>
+                                            <li><strong>Soundproofing:</strong> Double glazing reduces noise by 40-50 dB.</li>
+                                            <li><strong>Security:</strong> Grills and toughened glass ensure safety.</li>
+                                            <li><strong>Durability:</strong> Brown finish and uPVC resist weathering.</li>
+                                        </ul>
+                                        <h4>2. Why Unique Compared to Competitors</h4>
+                                        <ul>
+                                            <li>Inbuilt grills and brown finish are rare in budget brands.</li>
+                                        </ul>
+                                        <h4>3. Installation Suitability</h4>
+                                        <ul>
+                                            <li>Ideal for exterior home entrances or patios.</li>
+                                        </ul>
+                                    </div>`,
+                        view360Link: view360Links['upvc-015']
+                    },
+                ]
+            },
+            telecom: {
+                title: 'Telecom Solutions',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>`,
+                description: "Comprehensive voice and video communication solutions from leading brands, focusing on scalability and productivity.",
+                products: [
+                    { id: 'telecom-001', name: 'EPABX Systems', img: 'https://i.postimg.cc/KYkMJWQt/EPABX-Systems.png', desc: 'Reliable Electronic Private Automatic Branch Exchange systems for seamless internal and external call management.', price: 'Custom Quote', features: ['Brand: Panasonic', 'Model: KX-TES824', 'Capacity: 3 CO Lines, 8 Extensions', 'Features: Caller ID, Voicemail, Auto-Attendant'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Chhote se medium business ke liye, Panasonic ka yeh EPABX system ek solid choice hai. Isse aapke office ka communication ekdum professional ho jayega.</p></div>` },
+                    { id: 'telecom-002', name: 'IP-PBX Systems', img: 'https://i.postimg.cc/k42xsb09/IP-PBX-Systems.png', price: 'Custom Quote', desc: 'Modern IP-based PBX for unified communications, integrating voice, video, and data over your network.', features: ['Brand: Grandstream', 'Model: UCM6200 series', 'Users: Up to 500', 'Features: VoIP, Video Conferencing, Mobile Integration'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Agar aap apne business ko future-proof banana chahte hain, toh Grandstream IP-PBX best hai. Isse aap voice, video, sab ek hi network par manage kar sakte hain.</p></div>` },
+                    { id: 'telecom-003', name: 'IP Phones', img: 'https://i.postimg.cc/504r2nQg/IP-Phones.png', price: 'Custom Quote', desc: 'Feature-rich VoIP phones delivering crystal-clear HD audio, designed for the modern enterprise.', features: ['Brand: Yealink', 'Model: SIP-T31P', 'Audio: HD Voice', 'Display: Backlit Graphical LCD', 'Connectivity: Dual-port Gigabit Ethernet'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Yealink ke IP phones crystal-clear aawaz aur dher saare features ke saath aate hain. Aapke modern office ke liye yeh ek smart upgrade hai.</p></div>` },
+                    { id: 'telecom-004', name: 'Digital & Analog Phones', img: 'https://i.postimg.cc/sxpPKLjT/Digital-Analog-Phones.png', price: 'Custom Quote', desc: 'A range of reliable and user-friendly digital and analog phones for various business needs.', features: ['Brand: Panasonic', 'Model: KX-T7705', 'Display: 2-line LCD', 'Features: Caller ID, Speakerphone, 30 Call Logs'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Panasonic ka yeh phone simplicity aur reliability ka perfect combination hai. Roz ke business calls ke liye isse accha kuch nahi.</p></div>` },
+                    { id: 'telecom-005', name: 'Conference Phones', img: 'https://i.postimg.cc/tJbZ7R0D/Gemini-Generated-Image-avgchtavgchtavgc.png', price: 'Custom Quote', desc: 'Enable clear, productive conference calls with 360-degree microphone pickup and superior sound quality.', features: ['Brand: Polycom', 'Model: SoundStation 2', 'Microphone: 360-degree coverage', 'Technology: Acoustic Clarity', 'Ideal for: Small to midsize rooms'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Meeting rooms ke liye Polycom ka conference phone ek must-have hai. Isse har koi apni baat aasaani se aur clear aawaz mein keh sakta hai.</p></div>` },
+                    { id: 'telecom-006', name: 'Video Door Phones', img: 'https://i.postimg.cc/GmcryJDB/Video-Door-Phones.png', price: 'Custom Quote', desc: 'Enhance your security with video door phones that allow you to see and speak to visitors before opening the door.', features: ['Brand: Hikvision', 'Screen: 7-inch Colorful TFT LCD', 'Camera: High-resolution with night vision', 'Features: Two-way audio, Remote unlock'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Hikvision ka video door phone aapke ghar ya office ki security ko next level par le jaata hai. Ab darwaza kholne se pehle hi jaan lo kaun hai!</p></div>` },
+                    { id: 'telecom-007', name: 'Fax Machines', img: 'https://i.postimg.cc/KYH5YLpD/Fax-Machines.jpg', price: 'Custom Quote', desc: 'Reliable and efficient fax machines for secure document transmission.', features: ['Brand: Canon', 'Model: FAX-L170', 'Speed: Super G3 (33.6kbps)', 'Feeder: 30-sheet Automatic Document Feeder', 'Paper: Plain paper laser fax'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Jin businesses mein abhi bhi secure document transfer zaroori hai, unke liye Canon ka yeh fax machine ek reliable aur fast solution hai.</p></div>` },
+                ]
+            },
+            it: {
+                title: 'IT & Networking',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg>`,
+                description: "End-to-end IT infrastructure solutions including robust hardware and secure networking for businesses of all sizes.",
+                products: [
+                    { id: 'it-001', name: 'Desktop Computers', img: 'https://i.postimg.cc/m281jFFG/Gemini-Generated-Image-2mvraq2mvraq2mvr-2-copy-3.png', desc: 'Powerful and reliable desktop computers for business and professional use, with customizable configurations.', price: 'Custom Quote', features: ['Brand: HP / Dell', 'Processor: Intel Core i5/i7', 'RAM: 8GB/16GB DDR4', 'Storage: 512GB SSD'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>HP aur Dell ke desktops performance aur reliability ke liye jaane jaate hain. Aapke office ke har kaam ke liye yeh ek perfect choice hai.</p></div>` },
+                    { id: 'it-002', name: 'Laptops', img: 'https://i.postimg.cc/1R0qgdmX/Gemini-Generated-Image-2mvraq2mvraq2mvr-2-copy-2.png', price: 'Custom Quote', desc: 'A wide range of business laptops that offer a blend of performance, portability, and security.', features: ['Brand: HP / Dell / Lenovo', 'Screen: 14"/15.6" FHD', 'Processor: Intel Core i5/i7', 'Features: Lightweight, Long Battery Life'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Professionals ke liye jo hamesha on-the-go rehte hain, yeh laptops power aur portability ka best combination hain. Secure, durable, aur long battery life ke saath.</p></div>` },
+                    { id: 'it-003', name: 'Servers', img: 'https://i.postimg.cc/rp0H0Kf0/Servers.png', price: 'Custom Quote', desc: 'Scalable and secure servers to manage your critical data and applications with unmatched reliability.', features: ['Brand: Dell PowerEdge / HPE ProLiant', 'Type: Rack/Tower', 'Features: Redundant Power, RAID configuration', 'Scalability: High'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Aapke IT infrastructure ka dil! Dell aur HP ke servers aapke critical applications ko smoothly chalaane ke liye zaroori reliability aur security dete hain.</p></div>` },
+                    { id: 'it-004', name: 'Workstations', img: 'https://i.postimg.cc/Ss9H5J8F/Workstations.png', price: 'Custom Quote', desc: 'High-performance workstations designed for demanding tasks like graphic design, video editing, and engineering.', features: ['Brand: HP Z-series / Dell Precision', 'GPU: NVIDIA Quadro/RTX', 'RAM: 32GB+ ECC Memory', 'Use Case: Design, Video Editing'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Creative professionals aur engineers ke liye, yeh workstations high-end performance dete hain jo demanding applications ke liye zaroori hai.</p></div>` },
+                    { id: 'it-005', name: 'Security Access Systems', img: 'https://i.postimg.cc/gjDk6Mg0/Security-Access-Systems.png', price: 'Custom Quote', desc: 'Advanced biometric and card-based security access systems to protect your premises.', features: ['Brand: eSSL / ZKTeco', 'Type: Biometric (Fingerprint/Face)', 'Features: Time & Attendance, Access Control', 'Integration: Can be integrated with doors'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Apne assets aur staff ko protect karne ke liye yeh advanced security systems best hain. Biometric aur card-based options ke saath, yeh kisi bhi facility ke liye robust security provide karte hain.</p></div>` },
+                ]
+            },
+            power: {
+                title: 'Electricity & Power',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>`,
+                description: "Reliable power solutions for uninterrupted operations and sustainable energy, ensuring your business is always on.",
+                products: [
+                    { id: 'power-001', name: 'Online UPS', img: 'https://i.postimg.cc/JnjhR7JZ/Online-UPS.png', price: 'Custom Quote', desc: 'Continuous, clean power supply with zero transfer time for your most critical systems and servers.', features: ['Brand: APC / Eaton', 'Capacity: 1kVA - 10kVA', 'Waveform: Pure Sine Wave', 'Technology: Double-conversion'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Critical systems jaise servers ke liye, jahan ek second ka bhi downtime afford nahi kar sakte, APC ka Online UPS ultimate solution hai.</p></div>` },
+                    { id: 'power-002', name: 'Offline UPS', img: 'https://i.postimg.cc/y6XN5d7z/Offline-UPS.png', price: 'Custom Quote', desc: 'Cost-effective backup power solution for PCs and peripherals, protecting against power surges and outages.', features: ['Brand: APC / Luminous', 'Capacity: 600VA - 1500VA', 'Features: Automatic Voltage Regulation (AVR)', 'Outlets: 3-4 battery backup outlets'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Desktop computers aur dusre non-critical devices ko power surge aur chhote-mote power cuts se bachane ke liye yeh ek cost-effective solution hai.</p></div>` },
+                    { id: 'power-003', name: 'Inverters', img: 'https://i.postimg.cc/WbYjfcxZ/Inverters.png', price: 'Custom Quote', desc: 'High-capacity inverters to provide backup power for homes and offices during outages.', features: ['Brand: Luminous / Microtek', 'Capacity: 900VA - 5kVA', 'Waveform: Pure Sine Wave', 'Battery Support: Supports tall tubular batteries'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Power cuts ke time business continuity ke liye Luminous ke high-capacity inverters best hain. Yeh lights, computers, aur dusre zaroori equipment ko on rakhte hain.</p></div>` },
+                    { id: 'power-004', name: 'Solar Power Solutions', img: 'https://images.pexels.com/photos/433308/pexels-photo-433308.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', price: 'Custom Quote', desc: 'Eco-friendly renewable energy systems to reduce your carbon footprint and energy costs.', features: ['Panel Type: Monocrystalline / Polycrystalline', 'Brands: Loom Solar, Luminous', 'System: On-grid/Off-grid', 'Efficiency: Up to 22%'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Apne electricity bills kam karein aur environment ko bachayein hamare solar solutions ke saath. Hum aapki zaroorat ke hisaab se on-grid aur off-grid, dono systems provide karte hain.</p></div>` },
+                ]
+            },
+            software: {
+                title: 'Software Solutions',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+                description: "A suite of software solutions for enhanced productivity, security, and streamlined business operations.",
+                products: [
+                    { id: 'software-001', name: 'MS Office & MS Windows', img: 'https://i.postimg.cc/L5R85dB7/MS-Office-MS.png', price: 'As per license', desc: 'Empower your team with industry-standard tools for document creation, collaboration, and communication.', features: ['Version: Microsoft 365 Business', 'Apps: Word, Excel, PowerPoint, Outlook, Teams', 'Storage: 1 TB OneDrive per user', 'License: Genuine Volume Licensing'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Modern productivity ka base. Hum genuine MS Office aur Windows licenses provide karte hain, jisse aapki team ko success ke liye zaroori tools milte hain.</p></div>` },
+                    { id: 'software-002', name: 'Tally', img: 'https://i.postimg.cc/Kzjd50cz/tally.png', price: 'As per license', desc: 'The leading accounting software for small and medium businesses in India, for all your bookkeeping and compliance needs.', features: ['Version: TallyPrime', 'Features: GST Compliance, Inventory Management', 'Users: Single/Multi-user', 'Support: Full support available'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>India ke businesses ke liye aakhri accounting software. Tally se financial management, GST, aur inventory control, sab super easy ho jaata hai.</p></div>` },
+                    { id: 'software-003', name: 'Internet/Web Security', img: 'https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', price: 'Custom Quote', desc: 'Protect your digital ecosystem with robust antivirus, firewall, and anti-phishing solutions.', features: ['Brand: Quick Heal / Kaspersky', 'Protection: Antivirus, Anti-malware, Firewall', 'Suitable for: Endpoints and Servers', 'License: Multi-user licenses available'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Aaj ke digital world mein, web security non-negotiable hai. Hamare solutions aapke network aur devices ko malware aur cyber threats se bachate hain.</p></div>` },
+                    { id: 'software-004', name: 'Server Software', img: 'https://i.postimg.cc/HWJqcvPv/Server-Software.png', price: 'As per license', desc: 'Genuine licenses for server operating systems and software to ensure a stable and secure network environment.', features: ['OS: Windows Server 2022', 'Database: Microsoft SQL Server', 'Virtualization: VMware / Hyper-V', 'License: Genuine licenses'], detailedSpec: `<div class="spec-detailed"><h4>Professional Recommendation</h4><p>Apne network ki stability aur security ke liye genuine server software zaroori hai. Hum OS, database, aur virtualization ke liye reliable solutions provide karte hain.</p></div>` },
+                ]
+            }
+        };
+
+        // Make product data globally accessible for other scripts and functions
+        window.productsData = productsData;
+        window.findProductByName = (name) => {
+            for (const catKey in productsData) {
+                const found = productsData[catKey].products.find(p => p.name === name);
+                if (found) return found;
+            }
+            return null;
+        };
+
+
+        // --- DOM Elements ---
+        // Caching frequently accessed DOM elements for better performance.
+        const siteContent = document.getElementById('site-content');
+        const mapPage = document.getElementById('map-page');
+        const backToSiteBtn = document.getElementById('back-to-site-btn');
+        const categoryContainer = document.getElementById('product-category-container');
+        const detailsContainer = document.getElementById('product-details-container');
+        const modalContainer = document.getElementById('product-modal-container');
+        const orderSuccessModal = document.getElementById('order-success-modal');
+        const successProductName = document.getElementById('success-product-name');
+        
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerAnimIcon = document.getElementById('hamburger-anim-icon');
+
+        // --- MESSAGE BOX LOGIC ---
+        // A custom, non-blocking alert/message box function.
+        function showMessageBox(message, type = 'success') {
+            return new Promise(resolve => {
+                const messageBox = document.createElement('div');
+                const existingBox = document.querySelector('.message-box');
+                if (existingBox) existingBox.remove(); // Remove any existing message box
+                
+                messageBox.className = `message-box fixed top-5 left-1/2 -translate-x-1/2 p-4 rounded-lg shadow-xl text-center z-[20002] transition-all duration-300 transform scale-0 opacity-0 max-w-sm`;
+                
+                if (type === 'success') {
+                    messageBox.classList.add('bg-green-100', 'text-green-800', 'border', 'border-green-400');
+                } else {
+                    messageBox.classList.add('bg-red-100', 'text-red-800', 'border', 'border-red-400');
+                }
+
+                messageBox.innerHTML = `<p class="font-semibold">${message}</p>`;
+                document.body.appendChild(messageBox);
+
+                gsap.to(messageBox, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)' });
+
+                setTimeout(() => {
+                    gsap.to(messageBox, { scale: 0, opacity: 0, duration: 0.3, onComplete: () => messageBox.remove() });
+                    resolve(); 
+                }, 3000);
+            });
+        }
+        window.showMessageBox = showMessageBox;
+
+        // --- Confetti Animation ---
+        function triggerConfettiInElement() { 
+            const confettiCanvas = document.getElementById('confetti-canvas');
+            if (!confettiCanvas) return;
+
+            const myConfetti = confetti.create(confettiCanvas, {
+                resize: true, 
+                useWorker: true 
+            });
+
+            myConfetti({
+                particleCount: 150,
+                spread: 90,
+                origin: { y: 0.6 },
+                startVelocity: 35,
+                scalar: 0.9,
+                colors: ['#FFD700', '#FF6347', '#6A5ACD', '#3CB371', '#1E90FF'],
+                shapes: ['circle', 'square'],
+                ticks: 300,
+                gravity: 0.7,
+                decay: 0.9
+            });
+        }
+
+        // --- MODAL LOGIC ---
+        // Dynamically creates and manages the product detail modal.
+        function createModal(product, immediatelyShowOrderForm = false) {
+            document.body.classList.add('overflow-hidden');
+
+            const view360ButtonHTML = product.view360Link ? `
+                <a href="${product.view360Link}" target="_blank" rel="noopener noreferrer" class="btn-premium w-full block text-center py-3 rounded-lg mt-4">
+                    ✨ 360° View
+                </a>
+            ` : '';
+
+            const modalHTML = `
+                <div class="modal-overlay">
+                    <button class="modal-close-btn" onclick="closeModal()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <div class="modal-container">
+                        <div class="modal-image-pane">
+                            <img src="${product.img}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/800x800/cccccc/ffffff?text=Image+Not+Available';" loading="lazy">
+                        </div>
+                        <div class="modal-details-pane">
+                            <h3 class="text-3xl lg:text-4xl font-bold text-gray-900">${product.name}</h3>
+                            <p class="text-gray-600 my-4">${product.desc}</p>
+                            <div class="border-t my-6"></div>
+                            
+                            <h4 id="spec-heading" class="text-2xl font-bold text-gray-800 mb-3">Specifications</h4>
+                            
+                            <ul id="spec-summary" class="space-y-2 text-gray-700 mb-4">
+                                ${product.features.map(f => `<li class="flex items-start"><svg class="w-5 h-5 mr-3 text-[var(--accent-gold)] flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>${f}</span></li>`).join('')}
+                            </ul>
+                            
+                            <div id="spec-detailed-container" class="hidden">
+                                ${product.detailedSpec || '<p>No detailed specifications available.</p>'}
+                            </div>
+                            
+                            <button id="view-more-spec" class="btn-view-spec w-full text-center py-3 rounded-lg mt-4">View Full Specifications</button>
+                            <button id="view-less-spec" class="btn-view-spec w-full text-center py-3 rounded-lg mt-4 hidden">View Less</button>
+
+                            <div class="border-t my-6"></div>
+                            
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <p class="text-gray-600 text-sm">Indicative Market Rate</p>
+                                <p class="text-3xl font-bold text-[var(--accent-gold)]">${product.price}</p>
+                                <p class="text-gray-500 text-xs mt-1">*Prices are subject to change based on customization and market conditions.</p>
+                            </div>
+
+                            <button type="button" id="place-order-button-in-modal" class="btn-premium w-full block text-center py-3 rounded-lg mt-6">
+                                Place Order
+                            </button>
+                            ${view360ButtonHTML}
+
+                            <div class="border-t my-6"></div>
+
+                            <h4 class="text-2xl font-bold text-gray-800 mb-3">Nayra AI Insights</h4>
+                            <button type="button" id="ask-gemini-btn" class="btn-premium w-full block text-center py-3 rounded-lg flex items-center justify-center">
+                                <span id="gemini-spinner" class="spinner hidden"></span>
+                                <span id="gemini-btn-text">Ask Nayra AI ✨</span>
+                            </button>
+                            <div id="gemini-response-area" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 hidden">
+                                <p class="text-sm font-semibold text-gray-700 mb-2">Nayra</p>
+                                <div id="gemini-response-content" class="text-gray-800 text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modalContainer.innerHTML = modalHTML;
+            
+            gsap.fromTo('.modal-overlay', { opacity: 0 }, { opacity: 1, duration: 0.3 });
+            gsap.fromTo('.modal-container', { opacity: 0, y: 50, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'power3.out', onComplete: () => {
+                if (immediatelyShowOrderForm) {
+                    openOrderDetailsPopup(product);
+                }
+            }});
+
+            const viewMoreBtn = document.getElementById('view-more-spec');
+            const viewLessBtn = document.getElementById('view-less-spec');
+            const specSummary = document.getElementById('spec-summary');
+            const specDetailedContainer = document.getElementById('spec-detailed-container');
+            const modalOverlay = document.querySelector('.modal-overlay');
+            const specHeading = document.getElementById('spec-heading');
+
+            viewMoreBtn.addEventListener('click', () => {
+                gsap.to(specSummary, {
+                    opacity: 0,
+                    height: 0,
+                    duration: 0.3,
+                    onComplete: () => {
+                        specSummary.classList.add('hidden');
+                        specDetailedContainer.classList.remove('hidden');
+                        gsap.fromTo(specDetailedContainer, { opacity: 0, y: 20 }, {
+                            opacity: 1, y: 0, duration: 0.4, ease: 'power2.out',
+                            onComplete: () => {
+                                modalOverlay.scrollTo({
+                                   top: specDetailedContainer.offsetTop - specHeading.offsetHeight - 40,
+                                   behavior: 'smooth'
+                                });
+                            }
+                        });
+                    }
+                });
+                viewMoreBtn.classList.add('hidden');
+                viewLessBtn.classList.remove('hidden');
+            });
+
+            viewLessBtn.addEventListener('click', () => {
+                 modalOverlay.scrollTo({
+                    top: specHeading.offsetTop - specHeading.offsetHeight - 40,
+                    behavior: 'smooth'
+                });
+
+                gsap.to(specDetailedContainer, {
+                    opacity: 0,
+                    duration: 0.3,
+                    onComplete: () => {
+                        specDetailedContainer.classList.add('hidden');
+                        specSummary.classList.remove('hidden');
+                        gsap.fromTo(specSummary, { opacity: 0, y: -20, height: 'auto' }, {
+                            opacity: 1, y: 0, duration: 0.4, ease: 'power2.out'
+                        });
+                    }
+                });
+
+                viewMoreBtn.classList.remove('hidden');
+                viewLessBtn.classList.add('hidden');
+            });
+
+            document.getElementById('place-order-button-in-modal').addEventListener('click', () => {
+                const auth = window.getAuth();
+                if (auth.currentUser) {
+                    openOrderDetailsPopup(product);
+                } else {
+                    window.showMessageBox('Please log in to place an order.', 'error');
+                    if (window.showLoginModal) window.showLoginModal();
+                }
+            });
+
+            document.getElementById('ask-gemini-btn').addEventListener('click', () => {
+                getNayraAIProductDetails(product);
+            });
+        }
+
+        window.closeModal = function() {
+            document.body.classList.remove('overflow-hidden');
+            if (modalContainer.innerHTML !== '') { 
+                gsap.to(modalContainer.querySelector('.modal-container'), { opacity: 0, y: 50, scale: 0.95, duration: 0.3, ease: 'power3.in' });
+                gsap.to(modalContainer.querySelector('.modal-overlay'), { opacity: 0, duration: 0.4, onComplete: () => modalContainer.innerHTML = '' });
+            }
+        }
+
+        // --- Order Details and Confirmation Popup ---
+        function openOrderDetailsPopup(product) { 
+            const currentModalContainer = modalContainer.querySelector('.modal-container');
+            if (!currentModalContainer) {
+                console.error('Error: Modal container not found.');
+                return;
+            }
+
+            const auth = window.getAuth();
+            const user = auth.currentUser;
+            const userEmail = user ? user.email : '';
+            const userName = user ? user.displayName : '';
+
+            const contentHTML = `
+                <div class="modal-image-pane">
+                    <img src="${product.img}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/800x800/cccccc/ffffff?text=Image+Not+Available';" loading="lazy">
+                </div>
+                <div class="modal-details-pane p-6 lg:p-8 w-full">
+                    <h3 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Your Order Details</h3>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+                        <p class="text-lg font-semibold text-gray-800 mb-2">Product: ${product.name}</p>
+                        <p class="text-gray-600 text-sm mb-1">Price: ${product.price}</p>
+                        <p class="text-gray-600 text-sm">Description: ${product.desc}</p>
+                    </div>
+
+                    <form id="final-order-form" class="space-y-4" novalidate>
+                        <div>
+                            <label for="customer-name-final" class="text-sm font-semibold text-gray-700">Full Name</label>
+                            <input type="text" id="customer-name-final" value="${userName}" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="Enter your name" required>
+                        </div>
+                        <div>
+                            <label for="customer-email-final" class="text-sm font-semibold text-gray-700">Email Address</label>
+                            <input type="email" id="customer-email-final" value="${userEmail}" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="name@example.com" required>
+                        </div>
+                        <div>
+                            <label for="customer-phone-final" class="text-sm font-semibold text-gray-700">Phone Number</label>
+                            <input type="tel" id="customer-phone-final" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="10-digit mobile number" required>
+                        </div>
+                        <div>
+                            <label for="order-quantity" class="text-sm font-semibold text-gray-700">Quantity</label>
+                            <input type="number" id="order-quantity" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" value="1" min="1" required>
+                        </div>
+                        
+                        <h4 class="text-lg font-semibold text-gray-800 pt-4 border-t border-gray-200">Shipping Address</h4>
+                        <div>
+                            <label for="customer-address-street" class="text-sm font-semibold text-gray-700">Street Address</label>
+                            <input type="text" id="customer-address-street" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="e.g., 123 Main Street" required>
+                            <p class="error-message" id="street-error">Street address is required.</p>
+                        </div>
+                        <div>
+                            <label for="customer-address-apt" class="text-sm font-semibold text-gray-700">Apartment, suite, etc.</label>
+                            <input type="text" id="customer-address-apt" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="e.g., Apt 4B" required>
+                             <p class="error-message" id="apt-error">Apartment/suite is required.</p>
+                        </div>
+                        <div>
+                            <label for="customer-address-city" class="text-sm font-semibold text-gray-700">City</label>
+                            <input type="text" id="customer-address-city" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="e.g., New Delhi" required>
+                            <p class="error-message" id="city-error">City is required.</p>
+                        </div>
+                        <div>
+                            <label for="customer-address-postal" class="text-sm font-semibold text-gray-700">Postal Code</label>
+                            <input type="text" id="customer-address-postal" class="mt-1 block w-full px-4 py-3 bg-gray-50 border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--accent-gold)] focus:border-transparent transition" placeholder="e.g., 110019" required>
+                            <p class="error-message" id="postal-error">Must be a number with at least 5 digits.</p>
+                        </div>
+
+                        <button type="submit" id="confirm-order-btn" class="btn-premium w-full block text-center py-3 rounded-lg mt-6 flex items-center justify-center">
+                             <span class="spinner hidden"></span>
+                             <span class="btn-text">Confirm Order</span>
+                        </button>
+                    </form>
+                </div>
+            `;
+
+            gsap.to(currentModalContainer, {
+                opacity: 0,
+                duration: 0.3,
+                ease: 'power2.in',
+                onComplete: () => {
+                    currentModalContainer.innerHTML = contentHTML; 
+                    currentModalContainer.closest('.modal-overlay').scrollTop = 0;
+                    setupOrderFormValidation();
+                    gsap.to(currentModalContainer, { opacity: 1, duration: 0.4, ease: 'power3.out' });
+                }
+            });
+        }
+
+        // --- Show Full-Screen Order Success Popup ---
+        function showOrderSuccessPopup(productName) {
+            closeModal();
+            document.body.classList.add('overflow-hidden');
+
+            successProductName.textContent = `Product: ${productName}`;
+            orderSuccessModal.classList.add('active');
+
+            gsap.fromTo(orderSuccessModal.querySelector('.success-modal-content'), 
+                { opacity: 0, y: 50, scale: 0.9 }, 
+                { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', onComplete: () => {
+                    triggerConfettiInElement();
+                    setTimeout(closeOrderSuccessModal, 3000); 
+                }}
+            );
+        }
+        window.showOrderSuccessPopup = showOrderSuccessPopup;
+
+        window.closeOrderSuccessModal = function() {
+            gsap.to(orderSuccessModal, 
+                { opacity: 0, visibility: 'hidden', duration: 0.6, ease: 'power2.in', onComplete: () => {
+                    orderSuccessModal.classList.remove('active');
+                    document.body.classList.remove('overflow-hidden');
+                }}
+            );
+        };
+        
+        // --- DYNAMIC CONTENT ---
+        // Populates product categories and product cards from the `productsData` object.
+        function populateContent() {
+            Object.keys(productsData).forEach(catKey => {
+                const category = productsData[catKey];
+                
+                const cardHTML = `<div class="product-category-card rounded-2xl cursor-pointer p-8 text-center" data-target="${catKey}">${category.icon}<h3 class="text-xl font-semibold text-gray-800 mt-2">${category.title}</h3></div>`;
+                categoryContainer.innerHTML += cardHTML;
+
+                let productCardsHTML = '';
+                category.products.forEach((prod, index) => {
+                    const isHidden = index >= 4 ? 'hidden' : ''; 
+                    const view360BtnForCard = prod.view360Link ? `
+                        <a href="${prod.view360Link}" target="_blank" rel="noopener noreferrer" class="btn-premium w-full block text-center py-2 rounded-lg mt-2 text-sm">
+                            ✨ 360° View
+                        </a>
+                    ` : '';
+
+                    productCardsHTML += `
+                    <div class="sub-product-card rounded-xl overflow-hidden ${isHidden}" data-cat="${catKey}" data-index="${index}" data-action="view-details">
+                        <img src="${prod.img}" alt="${prod.name}" class="w-full h-64 object-cover cursor-pointer" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/ffffff?text=Image+Not+Found';" loading="lazy">
+                        <div class="p-6">
+                            <h4 class="text-lg font-bold text-gray-800">${prod.name}</h4>
+                            <p class="text-gray-600 text-sm mt-2 font-light">${prod.desc.substring(0, 80)}...</p>
+                            <button type="button" class="btn-premium w-full block text-center py-2 rounded-lg mt-4 text-sm" data-action="place-order">
+                                Place Order
+                            </button>
+                            ${view360BtnForCard}
+                        </div>
+                    </div>`;
+                });
+
+                const viewMoreButtonHTML = category.products.length > 4 ? `
+                    <div class="w-full text-center mt-12 view-more-container">
+                        <button class="btn-premium view-more-btn font-semibold px-8 py-3 rounded-full" data-target-cat="${catKey}" data-state="more">View More</button>
+                    </div>
+                ` : '';
+
+                const detailSectionHTML = `
+                    <div id="${catKey}" class="product-detail-section bg-transparent p-0">
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">${productCardsHTML}</div>
+                        ${viewMoreButtonHTML}
+                    </div>`;
+                detailsContainer.innerHTML += detailSectionHTML;
+            });
+        }
+
+        // --- PAGE NAVIGATION ---
+        // Handles smooth scrolling and page state changes for navigation.
+        function handleNavigation({ targetId, fromNav = false }) {
+            const allMainSections = document.querySelectorAll('#main-content > section');
+            const myOrdersSection = document.getElementById('my-orders');
+            const auth = window.getAuth();
+
+            if (targetId === '#my-orders') {
+                if (!auth.currentUser) {
+                    showMessageBox('Please log in to view your orders.', 'error');
+                    if (window.showLoginModal) window.showLoginModal();
+                    return;
+                }
+                allMainSections.forEach(sec => sec.classList.add('hidden'));
+                myOrdersSection.classList.remove('hidden');
+                 window.scrollTo({ top: myOrdersSection.offsetTop - 80, behavior: 'smooth' });
+            } else if (targetId === '#map') {
+                 mapPage.classList.remove('hidden');
+                 mapPage.style.display = 'block';
+                 siteContent.classList.add('hidden');
+                 gsap.fromTo(mapPage, {opacity: 0}, {opacity: 1, duration: 0.5});
+            } else {
+                 mapPage.classList.add('hidden');
+                 mapPage.style.display = 'none';
+                 siteContent.classList.remove('hidden');
+                 allMainSections.forEach(sec => {
+                    if (sec.id !== 'my-orders') {
+                        sec.classList.remove('hidden');
+                    }
+                 });
+                 myOrdersSection.classList.add('hidden');
+                 const targetElement = document.querySelector(targetId);
+                 if (targetElement) {
+                    const headerHeight = document.getElementById('header').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - headerHeight - 20;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                 }
+            }
+            
+            if (fromNav) {
+                setActiveNavLink(targetId);
+            }
+        }
+        window.handleNavigation = handleNavigation;
+
+
+        // --- EVENT LISTENERS ---
+        // Sets up all the interactive event listeners for the page.
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-link, .home-button, .hero-button').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const targetId = link.getAttribute('data-target') || link.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) {
+                        e.preventDefault();
+                        gsap.to(link, { scale: 1.1, duration: 0.15, yoyo: true, repeat: 1, ease: 'power1.inOut' });
+                        handleNavigation({ targetId, fromNav: true });
+                    }
+                    if (mobileMenu.classList.contains('active')) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+
+            backToSiteBtn.addEventListener('click', () => {
+                siteContent.classList.remove('hidden');
+                gsap.to(mapPage, {opacity: 0, duration: 0.5, onComplete: () => {
+                    mapPage.classList.add('hidden');
+                    mapPage.style.display = 'none';
+                }});
+                setActiveNavLink('#home');
+            });
+
+            document.body.addEventListener('click', function(e) {
+                // Product category card click
+                const categoryCard = e.target.closest('.product-category-card');
+                if (categoryCard) {
+                    const allCategoryCards = document.querySelectorAll('.product-category-card');
+                    const allDetailSections = document.querySelectorAll('.product-detail-section');
+                    const targetId = categoryCard.dataset.target;
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (categoryCard.classList.contains('active')) {
+                         if (targetSection) {
+                            const headerHeight = document.getElementById('header').offsetHeight;
+                            const elementPosition = targetSection.getBoundingClientRect().top + window.pageYOffset;
+                            const offsetPosition = elementPosition - headerHeight - 20;
+                            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        }
+                        return; 
+                    }
+
+                    allCategoryCards.forEach(c => c.classList.remove('active'));
+                    allDetailSections.forEach(s => {
+                        if (s.style.display === 'block') {
+                            gsap.to(s, { opacity: 0, duration: 0.3, onComplete: () => s.style.display = 'none' });
+                        }
+                    });
+
+                    categoryCard.classList.add('active');
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        gsap.to(targetSection, { 
+                            opacity: 1, 
+                            duration: 0.5, 
+                            delay: 0.2,
+                            onComplete: () => {
+                                const headerHeight = document.getElementById('header').offsetHeight;
+                                const elementPosition = targetSection.getBoundingClientRect().top + window.pageYOffset;
+                                const offsetPosition = elementPosition - headerHeight - 20;
+                                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                            }
+                        });
+                        gsap.from(targetSection.querySelectorAll('.sub-product-card:not(.hidden)'), { opacity: 0, y: 30, stagger: 0.07, duration: 0.6, ease: 'power3.out', delay: 0.3 });
+                    }
+                }
+
+                // Unified click listener for product card actions
+                const subProductCard = e.target.closest('.sub-product-card');
+                if (subProductCard) {
+                    const catKey = subProductCard.dataset.cat;
+                    const prodIndex = subProductCard.dataset.index;
+                    const product = productsData[catKey].products[prodIndex];
+                    
+                    if (e.target.closest('[data-action="place-order"]')) {
+                        createModal(product, true); 
+                    } else if (e.target.closest('[data-action="view-details"]') || e.target.tagName === 'IMG') {
+                        createModal(product); 
+                    }
+                }
+
+
+                // "View More/Show Less" button click
+                const viewMoreBtn = e.target.closest('.view-more-btn');
+                if (viewMoreBtn) {
+                    const targetCat = viewMoreBtn.dataset.targetCat;
+                    const allProductsInCat = document.querySelectorAll(`.sub-product-card[data-cat="${targetCat}"]`);
+                    const currentState = viewMoreBtn.dataset.state;
+
+                    if (currentState === 'more') {
+                        const hiddenProducts = Array.from(allProductsInCat).filter((p, index) => index >= 4);
+                        hiddenProducts.forEach(p => p.classList.remove('hidden'));
+                        gsap.fromTo(hiddenProducts, 
+                            { opacity: 0, y: 30 },
+                            { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power3.out' }
+                        );
+                        viewMoreBtn.textContent = 'Show Less';
+                        viewMoreBtn.dataset.state = 'less';
+                    } else {
+                        const productsToHide = Array.from(allProductsInCat).filter((p, index) => index >= 4);
+                        gsap.to(productsToHide, { 
+                            opacity: 0, y: -30, duration: 0.3, stagger: 0.05, 
+                            onComplete: () => {
+                                productsToHide.forEach(p => p.classList.add('hidden'));
+                                viewMoreBtn.textContent = 'View More';
+                                viewMoreBtn.dataset.state = 'more';
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Mobile Menu Logic
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('active');
+                hamburgerAnimIcon.classList.remove('open');
+                mobileMenuButton.classList.remove('open');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            mobileMenuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isActive = mobileMenu.classList.toggle('active');
+                hamburgerAnimIcon.classList.toggle('open', isActive);
+                mobileMenuButton.classList.toggle('open', isActive);
+                document.body.classList.toggle('overflow-hidden', isActive);
+            });
+            
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const isScrolled = window.scrollY > 50;
+                document.getElementById('header').classList.toggle('scrolled', isScrolled);
+                if (!mobileMenuButton.classList.contains('open')) {
+                    mobileMenuButton.classList.toggle('text-white', !isScrolled);
+                    mobileMenuButton.classList.toggle('text-gray-800', isScrolled);
+                }
+            });
+        }
+        
+        // --- FORM VALIDATION ---
+        function setupOrderFormValidation() {
+            const streetInput = document.getElementById('customer-address-street');
+            const aptInput = document.getElementById('customer-address-apt');
+            const cityInput = document.getElementById('customer-address-city');
+            const postalInput = document.getElementById('customer-address-postal');
+
+            streetInput.addEventListener('input', () => validateStreet(streetInput));
+            aptInput.addEventListener('input', () => validateApt(aptInput));
+            cityInput.addEventListener('input', () => validateCity(cityInput));
+            postalInput.addEventListener('input', () => validatePostal(postalInput));
+        }
+
+        function validateField(input, errorEl, condition) {
+            if (condition) {
+                input.classList.remove('invalid');
+                errorEl.style.display = 'none';
+                return true;
+            } else {
+                input.classList.add('invalid');
+                errorEl.style.display = 'block';
+                return false;
+            }
+        }
+
+        const validateStreet = (el) => validateField(el, document.getElementById('street-error'), el.value.trim().length > 0);
+        const validateApt = (el) => validateField(el, document.getElementById('apt-error'), el.value.trim().length > 0);
+        const validateCity = (el) => validateField(el, document.getElementById('city-error'), el.value.trim().length > 0);
+        const validatePostal = (el) => validateField(el, document.getElementById('postal-error'), /^\d{5,}$/.test(el.value));
+
+        window.validateOrderForm = function() {
+            const isStreetValid = validateStreet(document.getElementById('customer-address-street'));
+            const isAptValid = validateApt(document.getElementById('customer-address-apt'));
+            const isCityValid = validateCity(document.getElementById('customer-address-city'));
+            const isPostalValid = validatePostal(document.getElementById('customer-address-postal'));
+            return isStreetValid && isAptValid && isCityValid && isPostalValid;
+        }
+
+
+        function typewriterEffect(element, text, onComplete) {
+            let i = 0;
+            element.innerHTML = "";
+            let intervalId = setInterval(() => {
+                if (i < text.length) {
+                    element.innerHTML = text.substring(0, i + 1) + '<span class="typewriter-cursor"></span>';
+                    i++;
+                } else {
+                    clearInterval(intervalId);
+                    element.innerHTML = text;
+                    if (onComplete) onComplete();
+                }
+            }, 60); 
+        }
+
+        // --- ANIMATIONS & SCROLL TRIGGERS ---
+        // Sets the active state for navigation links based on scroll position.
+        function setActiveNavLink(targetId) {
+            document.querySelectorAll('.nav-link').forEach(navLink => {
+                navLink.classList.remove('active');
+                if (navLink.getAttribute('data-target') === targetId) {
+                    navLink.classList.add('active');
+                }
+            });
+        }
+
+        // Configures all the scroll-based animations for the page.
+        function setupScrollAnimations() {
+            gsap.to('.hero-section', {
+                backgroundPosition: `50% ${window.innerHeight / 4}px`,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            const sections = document.querySelectorAll('#main-content > section');
+            sections.forEach(section => {
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 85%',
+                        toggleActions: 'play none none none',
+                    },
+                    opacity: 0,
+                    y: 60,
+                    duration: 1.2,
+                    ease: 'power3.out'
+                });
+                
+                // Scrollspy for nav links
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: "top center",
+                    end: "bottom center",
+                    onToggle: self => {
+                        if (self.isActive && !document.body.classList.contains('my-orders-active')) {
+                           setActiveNavLink(`#${section.id}`);
+                        }
+                    }
+                });
+            });
+            
+            const timeline = document.querySelector('.timeline');
+            if(timeline) {
+                const timelineAfter = gsap.utils.selector(timeline)('::after');
+                gsap.to(timelineAfter, {
+                    scrollTrigger: { trigger: timeline, start: 'top center', end: 'bottom center', scrub: 1 },
+                    scaleY: 1, ease: 'none'
+                });
+
+                gsap.matchMedia().add("(min-width: 768px)", () => {
+                    document.querySelectorAll('.timeline-container').forEach(item => {
+                        const isLeft = item.classList.contains('left');
+                        gsap.from(item.querySelector('.timeline-content'), {
+                            scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none reverse' },
+                            opacity: 0,
+                            scale: 0.95,
+                            x: isLeft ? 60 : -60, 
+                            duration: 0.8,
+                            ease: 'power3.out'
+                        });
+                    });
+                });
+                gsap.matchMedia().add("(max-width: 767px)", () => {
+                     document.querySelectorAll('.timeline-container').forEach(item => {
+                        gsap.from(item.querySelector('.timeline-content'), {
+                            scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none reverse' },
+                            opacity: 0,
+                            x: -50,
+                            duration: 0.8,
+                            ease: 'power3.out'
+                        });
+                    });
+                });
+            }
+        }
+        
+        // --- NAYRA AI HELPER for generating detailed insight (UPDATED) ---
+        function generateInsightHTML(product) {
+            const categoryData = Object.values(productsData).find(cat => cat.products.some(p => p.id === product.id));
+            const categoryName = categoryData ? categoryData.title : "General";
+
+            // Helper to create the specification table
+            const createSpecTable = (features) => {
+                let tableRows = '';
+                features.forEach(feature => {
+                    const parts = feature.split(':');
+                    if (parts.length === 2) {
+                        tableRows += `<tr class="bg-white border-b"><td class="px-4 py-2 font-semibold text-gray-600">${parts[0].trim()}</td><td class="px-4 py-2">${parts[1].trim()}</td></tr>`;
+                    }
+                });
+                return `<div class="overflow-x-auto rounded-lg border border-gray-200 mt-2">
+                            <table class="w-full text-sm text-left text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                    <tr><th scope="col" class="px-4 py-3">Feature</th><th scope="col" class="px-4 py-3">Details</th></tr>
+                                </thead>
+                                <tbody>${tableRows}</tbody>
+                            </table>
+                        </div>`;
+            };
+
+            // --- Point 4: Key Features & Benefits (Dynamic) ---
+            let keyFeaturesHTML = '<ul class="list-disc pl-5 mt-1 text-sm space-y-1">';
+            let featuresFound = new Set();
+            if (product.features.some(f => f.toLowerCase().includes('double glazing'))) {
+                keyFeaturesHTML += '<li><strong>Behtareen Soundproofing:</strong> Double glazing shor ko kaafi had tak kam karta hai, shaant mahaul ke liye perfect hai.</li>';
+                featuresFound.add('sound');
+            }
+            if (product.features.some(f => f.toLowerCase().includes('toughened glass'))) {
+                keyFeaturesHTML += '<li><strong>Mazboot Security:</strong> Toughened glass aasaani se nahi tootta, jisse aapki suraksha badh jaati hai.</li>';
+                featuresFound.add('security');
+            }
+            if (product.features.some(f => f.toLowerCase().includes('sliding'))) {
+                keyFeaturesHTML += '<li><strong>Space Saving Design:</strong> Sliding mechanism jagah bachata hai aur modern look deta hai.</li>';
+                featuresFound.add('design');
+            }
+            if (featuresFound.size < 2) {
+                keyFeaturesHTML += '<li><strong>High Durability:</strong> Iski build quality aisi hai ki yeh saalon saal chalega.</li>';
+            }
+            if (featuresFound.size < 3) {
+                keyFeaturesHTML += '<li><strong>Elegant Aesthetics:</strong> Iska design modern hai aur aapke space ko ek premium look dega.</li>';
+            }
+            keyFeaturesHTML += '</ul>';
+
+            // --- Point 5: Usage & Location (Dynamic) ---
+            let usageText = "Yeh product residential aur commercial, dono jagah ke liye suitable hai. Iski versatility isko ek great choice banati hai."; // Default
+            const usageFeature = product.features.find(f => f.toLowerCase().startsWith('usage:'));
+            const locationFeature = product.features.find(f => f.toLowerCase().startsWith('location:'));
+            if (usageFeature) {
+                const usage = usageFeature.split(':')[1].trim();
+                usageText = `Yeh khaas taur par <strong>${usage}</strong> ke liye design kiya gaya hai, jahan iski performance sabse behtar rehti hai.`;
+            } else if (locationFeature) {
+                const location = locationFeature.split(':')[1].trim();
+                usageText = `Isko <strong>${location}</strong> jaise areas ke liye banaya gaya hai, jisse yeh wahan ki zarooraton ko poora kar sake.`;
+            } else if (product.detailedSpec && product.detailedSpec.includes('Ideal for high-rise')) {
+                usageText = 'Yeh product high-rise buildings, modern offices, aur gharon ke liye ekdum perfect hai jahan style aur safety dono important hain.';
+            }
+
+            // --- Point 6: Brand & Quality (Dynamic) ---
+            let brandText = "S&S Enterprises hamesha quality par focus karti hai. Hum top brands ke saath kaam karte hain, toh quality ki tension lene ki zaroorat nahi hai."; // Default
+            const brandFeature = product.features.find(f => f.toLowerCase().startsWith('brand:'));
+            if (brandFeature) {
+                const brand = brandFeature.split(':')[1].trim();
+                brandText = `Hum <strong>${brand}</strong> jaise top brands ke saath kaam karte hain, isliye aapko best quality ka product milta hai.`;
+            } else if (product.id.startsWith('upvc')) {
+                brandText = "S&S Enterprises hamesha quality par focus karti hai. Hum <strong>Deceuninck</strong> jaise global leaders ke saath kaam karte hain, toh quality ki tension lene ki zaroorat nahi hai.";
+            }
+
+            // --- Point 8: Competitive Edge (Dynamic) ---
+            let competitiveEdgeText = "Market mein dusre options ke comparison mein, yeh product aapko <strong>better features</strong> aur <strong>long-lasting durability</strong> deta hai. Yeh ek smart investment hai."; // Default
+            if(product.detailedSpec) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(product.detailedSpec, 'text/html');
+                const competitorHeading = Array.from(doc.querySelectorAll('h4')).find(h => h.textContent.toLowerCase().includes('competitors'));
+                if (competitorHeading) {
+                    const competitorInfo = competitorHeading.nextElementSibling;
+                    if (competitorInfo && competitorInfo.tagName === 'UL' && competitorInfo.firstElementChild) {
+                         competitiveEdgeText = `Market mein dusre options ke muqable, ${competitorInfo.firstElementChild.textContent.trim()}. Isliye yeh ek smart investment hai.`;
+                    }
+                }
+            }
+            
+            // Main insight structure
+            let insightContent = `
+                <div class="space-y-4">
+                    <div>
+                        <h5 class="font-bold text-md">1. Product Name & Category</h5>
+                        <p>Yeh hai <strong>${product.name}</strong>, jo hamare <strong>${categoryName}</strong> collection ka ek star product hai.</p>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-md">2. Price & Cost Details</h5>
+                        <p>Iska indicative price <strong>${product.price}</strong> hai. Yeh price quality aur features ke hisaab se kaafi competitive hai. Final cost aapke customization par depend karegi.</p>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-md">3. Specifications</h5>
+                        ${createSpecTable(product.features)}
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-md">4. Key Features & Benefits</h5>
+                        ${keyFeaturesHTML}
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-md">5. Usage & Location</h5>
+                        <p>${usageText}</p>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-md">6. Brand & Quality Assurance</h5>
+                        <p>${brandText}</p>
+                    </div>
+                     <div>
+                        <h5 class="font-bold text-md">7. Installation & After-Sales</h5>
+                        <p>Hamari team professional installation provide karti hai aur after-sales support ke liye hamesha ready rehti hai. Aapko koi pareshani nahi hogi.</p>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-md">8. Comparison & Competitive Edge</h5>
+                        <p>${competitiveEdgeText}</p>
+                    </div>
+                </div>
+            `;
+            return insightContent;
+        }
+
+
+        // --- Nayra AI Product Details Function ---
+        async function getNayraAIProductDetails(product) {
+            const askGeminiBtn = document.getElementById('ask-gemini-btn');
+            const geminiBtnText = document.getElementById('gemini-btn-text');
+            const geminiSpinner = askGeminiBtn.querySelector('.spinner');
+            const geminiResponseArea = document.getElementById('gemini-response-area');
+            const geminiResponseContent = document.getElementById('gemini-response-content');
+
+            geminiBtnText.textContent = 'Thinking...';
+            geminiSpinner.classList.remove('hidden');
+            askGeminiBtn.disabled = true;
+            geminiResponseArea.classList.add('hidden');
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+                const insightHTML = generateInsightHTML(product);
+                geminiResponseContent.innerHTML = insightHTML;
+                geminiResponseArea.classList.remove('hidden');
+                gsap.fromTo(geminiResponseArea, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5});
+            } catch (error) {
+                console.error('Error getting Nayra AI details:', error);
+                geminiResponseContent.textContent = 'Sorry, an error occurred while retrieving information.';
+                geminiResponseArea.classList.remove('hidden');
+            } finally {
+                geminiBtnText.textContent = 'Ask Nayra AI ✨';
+                geminiSpinner.classList.add('hidden');
+                askGeminiBtn.disabled = false;
+            }
+        }
+        
+        // --- NAYRA AI RECOMMENDATION ENGINE (Updated) ---
+        async function getNayraAIRecommendations() {
+            const getBtn = document.getElementById('get-recommendations-btn');
+            const btnText = document.getElementById('recommendations-text');
+            const spinner = document.getElementById('recommendations-spinner');
+            const outputArea = document.getElementById('recommendations-output');
+            const userNeeds = document.getElementById('user-needs').value.toLowerCase();
+            const userBudget = document.getElementById('user-budget').value;
+
+            btnText.textContent = 'Soch rahi hoon...';
+            spinner.classList.remove('hidden');
+            getBtn.disabled = true;
+            outputArea.classList.add('hidden');
+
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const keywords = {
+                upvc: ['window', 'door', 'glass', 'noise', 'sound', 'energy', 'security', 'grill', 'balcony', 'ghar', 'home', 'office'],
+                telecom: ['phone', 'communication', 'business', 'office', 'call', 'conference', 'pbx', 'ip'],
+                it: ['computer', 'laptop', 'server', 'network', 'security', 'data', 'workstation'],
+                power: ['power', 'ups', 'inverter', 'solar', 'backup', 'electricity', 'bijli'],
+                software: ['software', 'office', 'windows', 'tally', 'security', 'antivirus']
+            };
+
+            let allProducts = [];
+            for (const category in productsData) {
+                productsData[category].products.forEach(p => {
+                    allProducts.push({ ...p, category: productsData[category].title, categoryKey: category });
+                });
+            }
+
+            let scoredProducts = allProducts.map(product => {
+                let score = 0;
+                const productText = `${product.name.toLowerCase()} ${product.desc.toLowerCase()} ${product.features.join(' ').toLowerCase()}`;
+                
+                const relevantKeywords = keywords[product.categoryKey] || [];
+                relevantKeywords.forEach(keyword => {
+                    if (userNeeds.includes(keyword)) score += 2;
+                });
+                
+                userNeeds.split(' ').forEach(word => {
+                    if (word.length > 2 && productText.includes(word)) score++;
+                });
+                return { ...product, score };
+            }).filter(p => p.score > 0);
+
+            scoredProducts.sort((a, b) => b.score - a.score);
+            const recommendations = scoredProducts.slice(0, 3);
+
+            let responseHTML = '';
+            let finalVerdictText = '';
+
+            if (recommendations.length > 0) {
+                responseHTML += '<h4 class="text-xl font-bold text-gray-800 mb-4">Aapke liye mere Top Suggestions:</h4>';
+                responseHTML += '<div class="space-y-6">';
+
+                recommendations.forEach((rec, index) => {
+                    responseHTML += `
+                        <div class="border-t pt-4">
+                            <p class="font-bold text-lg text-gray-900">${index + 1}. ${rec.name}</p>
+                            <ul class="list-none pl-5 mt-2 space-y-2 text-gray-700">
+                                <li><span class="font-semibold">Category:</span> ${rec.category}</li>
+                                <li><span class="font-semibold">Price:</span> ${rec.price}</li>
+                                <li><span class="font-semibold">Aapke liye Kyun Sahi Hai:</span> Yeh aapki '${userNeeds.split(' ')[0]}' ki zaroorat ko poora karta hai. Iski quality aur features aapko pasand aayenge!</li>
+                            </ul>
+                        </div>
+                    `;
+                });
+                responseHTML += '</div>';
+                
+                // Smarter Final Verdict
+                let budgetAnalysis = '';
+                if (userBudget) {
+                    const budgetNumber = parseInt(userBudget.replace(/[^0-9]/g, ''));
+                    if (budgetNumber) {
+                        if (budgetNumber < 50000) {
+                            budgetAnalysis = "Aapka budget thoda tight lag raha hai, but chinta mat karo, S&S Enterprises mein har budget ke liye options hain. ";
+                        } else if (budgetNumber >= 50000 && budgetNumber <= 100000) {
+                            budgetAnalysis = "Aapka budget kaafi accha hai! Is range mein aapko premium quality aur features mil jayenge. ";
+                        } else {
+                            budgetAnalysis = "Wow, aapka budget kaafi solid hai! Aap top-of-the-line products aaram se dekh sakte hain. ";
+                        }
+                    }
+                }
+
+                finalVerdictText = `${budgetAnalysis}Overall, aapki needs ke hisaab se, mujhe lagta hai ki <strong>${recommendations[0].name}</strong> aapke liye sabse best option hoga. Isme performance aur value, dono ka perfect balance hai. Agar aap thoda aur invest karna chahte hain, toh <strong>${recommendations[1]?.name || 'doosre options'}</strong> bhi ek super choice hai.`;
+
+            } else {
+                finalVerdictText = "Aapki requirement thodi unique hai. Main suggest karungi ki aap ek baar hamari team se direct baat karein, woh aapko perfect solution denge!";
+            }
+            
+            responseHTML += `
+                <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mt-8 rounded-r-lg shadow-sm">
+                    <p class="font-bold">Nayra's Final Verdict</p>
+                    <p>${finalVerdictText}</p>
+                </div>
+            `;
+
+            outputArea.innerHTML = responseHTML;
+            outputArea.classList.remove('hidden');
+            gsap.fromTo(outputArea, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 0.5});
+            
+            btnText.textContent = 'Get Nayra Recommendation';
+            spinner.classList.add('hidden');
+            getBtn.disabled = false;
+        }
+
+        document.getElementById('get-recommendations-btn').addEventListener('click', getNayraAIRecommendations);
+
+
+        // --- INITIALIZATION ---
+        // This is the entry point when the DOM is fully loaded.
+        function init() {
+            const subtitleElement = document.getElementById('typewriter-subtitle');
+            const originalSubtitleText = "Pioneering world-class uPVC, IT & Power solutions since 2014.";
+            typewriterEffect(subtitleElement, originalSubtitleText);
+
+            populateContent();
+            
+            // Set the first product category as active by default.
+            const upvcCard = document.querySelector('.product-category-card[data-target="upvc"]');
+            const upvcSection = document.getElementById('upvc');
+            if (upvcCard && upvcSection) {
+                upvcCard.classList.add('active');
+                upvcSection.style.display = 'block';
+            }
+
+            setupEventListeners();
+            setupScrollAnimations();
+            setActiveNavLink('#home');
+        }
+
+        // Run the initialization function.
+        init();
+    });
+    </script>
+</body>
+</html>
+q
